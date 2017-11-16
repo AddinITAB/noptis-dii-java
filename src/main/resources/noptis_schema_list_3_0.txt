@@ -1,0 +1,9 @@
+/NOPTIS-DII-3.0/schema/xsd/DII-Organisations.xsd
+/NOPTIS-DII-3.0/schema/xsd/DII-Calendars.xsd
+/NOPTIS-DII-3.0/schema/xsd/DII-VersionFrames.xsd
+/NOPTIS-DII-3.0/schema/xsd/DII-Network.xsd
+/NOPTIS-DII-3.0/schema/xsd/PT-SharedTypes.xsd
+/NOPTIS-DII-3.0/schema/xsd/DII-Services.xsd
+/NOPTIS-DII-3.0/schema/xsd/DII-Timetable.xsd
+/NOPTIS-DII-3.0/schema/xsd/DII-VehicleSchedule.xsd
+/NOPTIS-DII-3.0/schema/xsd/DII-ProductionResources.xsd
