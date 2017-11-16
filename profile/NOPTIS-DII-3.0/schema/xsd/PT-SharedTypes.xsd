@@ -1,0 +1,2133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.5.20">
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2014.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+				 
+		Version 3.04 - First release version.
+		Version 3.5.1 
+			- SecondaryDestination is optional.
+			- Complex type Origin added.
+			- Attribute Code removed from ServiceRequirement.
+			-Set minLength to 1 for token and stringbased types in the schemas, this concerns Comment, ExternalSourceReference, ParameterData, Name, PersonRef, Note, CountryCode, DayTypeCode, Abbreviation, Initials, ExternalID, PersonRef, CountryCode and ShortName. 
+			- Optional number attribute added to DeadRunDef.		
+			- Annotation for PTObjectDef changed.
+			- DirectionOfLineRef required in ServiceJourneyDef.
+			- Additional meanings of secondary destination added.
+		Version 3.5.2
+			- ParkingPlaceRef extended with GarageName choice and additional annotation.
+			- Correction of annotation concerning language code for swedish in 639.1.
+			- Unused VehicleTypeCode removed.
+			- Set minLength to 1 and maxLength to 16 for Coordinate.
+			- All normalizedstring replaced by token.
+		Version 3.5.3
+			- ComplexType BasicLastCall corrected.	
+		Version 3.5.4	
+			- DayOffset  complex type used where applicable instead off Count.
+			- Redundant DatePeriod complex type removed.
+			- nonNegativeInteger replaced by positiveInteger for types where value 0 should be forbidden.
+			- Simple type PosteriorSequenceNumber added.
+		Version 3.5.5
+			- Simple type PosteriorSequenceNumber redesigned, but no actual change, so it is backward compatible.
+		Version 3.5.6
+			- Fuel type enumeration values HYDROGEN and E85 added. 
+		Version 3.5.7
+			- PosteriorSequenceNumber corrected. It is not allowed to repeat the same restriction as in the base type.
+			- DayOffset corrected. Redundant restriction removed.
+			- CommunicationProtocol enumeration UNSPECIFIED replaced by UNKNOWN.
+			- Namespace adjusted.
+		Version 3.5.8
+			- Clarifying annotation added to SequenceNumber.
+		Version 3.5.9
+			-MaxInclusive restriction added to simple type Meters.
+		Version 3.5.10
+			 -Attribute DeviceName under DestinationDisplay.ExternalKeys.Key is required.
+		Version 3.5.11
+			-Attributes uses specific type of Gid instead of general Gid type.
+			-Complex types DetailedNote, ExternalNoteRef and Notes added.
+			-Public, service and special day type code adjusted.
+			-Special day type code extended.
+			-Attribute Code replaced by attribute ReferenceName in complexType SpecialCalendarRef 
+		Version 3.5.12
+			-SimpleType JourneyPatternPointNumber corrected - should allow 9 digits.
+		Version 3.5.13
+			-Simple type HyperLinkName added.
+		Version 3.5.14
+			-SimpleType JourneyPatternPointNumber reversed to allow only 8 digits for backwards compatibility issues.
+		Version 3.5.15
+            -Complex type Member added.
+        Version 3.5.16 Added support for Keys (free attributes)
+        Version 3.5.17 Correction - Keys (free attributes)	
+        Version 3.5.18 Added ContractRef
+        Version 3.5.19 Added DepartmentInOrganisationRef and OrganisationalOrDepartmentUnitRef	
+        Version 3.5.20 Added SimpleBasicCall that is not extendable. 
+		</xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Keys">
+		<xs:annotation>
+			<xs:documentation>Free attributes.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Key" type="PT:Key" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Key">
+		<xs:annotation>
+			<xs:documentation>Free attribute.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="KeyValues">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="KeyValue" type="PT:KeyValue" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="TypeName" type="PT:Name" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="KeyValue">
+		<xs:annotation>
+			<xs:documentation>Free attribute value.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Value" type="xs:string" use="required"/>
+		<xs:attribute name="VariantCode" type="PT:Name" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PeriodOfDays">
+		<xs:annotation>
+			<xs:documentation>---.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="ValidFromDate" type="PT:Date" use="required"/>
+		<xs:attribute name="InvalidFromDate" type="PT:Date" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="FixedPeriodOfDays">
+		<xs:annotation>
+			<xs:documentation>---.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="ValidFromDate" type="PT:Date" use="required"/>
+		<xs:attribute name="InvalidFromDate" type="PT:Date" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DayTypes">
+		<xs:sequence>
+			<xs:element name="DayType" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="Code" type="PT:DayTypeCode" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OperatingDayExceptions">
+		<xs:annotation>
+			<xs:documentation>OperatingDayExceptions redefines the working period within the period of validity for the Version.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice minOccurs="0">
+				<xs:element name="WorkNotPeriods">
+					<xs:annotation>
+						<xs:documentation> WorkNotPeriods expresses that operation will be performed as indicated by the Calendar and DayTypes, with the exception of the given periods, when no operation will take place.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="WorkNotPeriod" type="PT:FixedPeriodOfDays" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="WorkOnlyPeriods">
+					<xs:annotation>
+						<xs:documentation> WorkOnlyPeriods expresses that operation will be performed as indicated by the Calendar and DayTypes, but only during the given periods.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="WorkOnlyPeriod" type="PT:FixedPeriodOfDays" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="WorkAlsoPeriods" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>WorkAlsoPeriods adds explicit periods of operation in addition to those defined otherwise. Operation will be performed daily in the given periods regardless of any limitations implied by WorkNotPeriods and WorkOnlyPeriods, Calendar and DayTypes.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="WorkAlsoPeriod" type="PT:FixedPeriodOfDays" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PTObject" abstract="true">
+		<xs:attribute name="ExternalSourceReference" type="PT:ExternalSourceReference" use="optional">
+			<xs:annotation>
+				<xs:documentation>Information about where this object can be found in the exporting system. This information will be returned in import error messages concerning this object. This information is not imported, but will only be used during the import process.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ExternalSourceComment" type="PT:Comment" use="optional">
+			<xs:annotation>
+				<xs:documentation>Additional information about this object that might simplify resolving import errors. This information will be returned in import error messages concerning this object. This information is not imported, but will only be used during the import process.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExtendablePTObject" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObject">
+				<xs:sequence>
+					<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PTObjectRef" abstract="true">
+		<xs:annotation>
+			<xs:documentation>This is an early bound reference to a named object </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="ExternalSourceReference" type="PT:ExternalSourceReference" use="optional">
+			<xs:annotation>
+				<xs:documentation>Information about where this object can be found in the exporting system. This information will be returned in import error messages concerning this object. This information is not imported, but will only be used during the import process.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ExternalSourceComment" type="PT:Comment" use="optional">
+			<xs:annotation>
+				<xs:documentation>Additional information about this object that might simplify resolving import errors. This information will be returned in import error messages concerning this object. This information is not imported, but will only be used during the import process.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExtendablePTObjectRef" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PTObjectDef" abstract="true">
+		<xs:annotation>
+			<xs:documentation>This is a reference to an object exactly matching the set of attributes (ExternalSourceReference and ExternalSourceComment are exluded from the matching) </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="ExternalSourceReference" type="PT:ExternalSourceReference" use="optional">
+			<xs:annotation>
+				<xs:documentation>Information about where this object can be found in the exporting system. This information will be returned in import error messages concerning this object. This information is not imported, but will only be used during the import process.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ExternalSourceComment" type="PT:Comment" use="optional">
+			<xs:annotation>
+				<xs:documentation>Additional information about this object that might simplify resolving import errors. This information will be returned in import error messages concerning this object. This information is not imported, but will only be used during the import process.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExtendablePTObjectDef" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectDef">
+				<xs:sequence>
+					<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Document">
+		<xs:annotation>
+			<xs:documentation>DII document header.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="Comments" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>General information that could be of interest when manually reading this document. This information is not imported.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Comment" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="Comment" type="PT:Comment" use="optional"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Source">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="User" type="PT:User" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Name and e-mail address of the person that submitted this document. The e-mail address is used to supply information about the success or failure of the import of this document.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Application" type="PT:Application" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Information about the application that produced this document. Intended for manual reading. This information is not imported.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="CreatedDateTime" type="PT:DateTime" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="IssuingTransportAuthorityRef" type="PT:TransportAuthorityRef">
+				<xs:annotation>
+					<xs:documentation>This serves as a default TransportAuthority for all PTObjects in the document where no specific TransportAuthority is given.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VersionFrameRef">
+				<xs:annotation>
+					<xs:documentation>Used for version management of data. The VersionFrame must be unique within the defining OrganisationalUnit scope.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DefiningOrganisationalUnitRef" type="PT:OrganisationalUnitRef"/>
+					</xs:sequence>
+					<xs:attribute name="Name" type="PT:Name" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ModificationType" type="PT:ModificationType" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ConsecutiveVersion">
+		<xs:annotation>
+			<xs:documentation>DII document header for documents with consecutive version management.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:Document">
+				<xs:attribute name="EarliestValidFromDate" type="PT:Date" use="optional">
+					<xs:annotation>
+						<xs:documentation>Serves as default value for ValidFromDate for all PTObjects in document and as a limit as well. Earlier dates will be truncated to this value.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="SingleStateVersion">
+		<xs:annotation>
+			<xs:documentation>DII document header for documents with single state version management.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:Document"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="CompetitiveVersion">
+		<xs:annotation>
+			<xs:documentation>DII document header for documents with competitive version management.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:Document">
+				<xs:sequence>
+					<xs:element name="ValidDatePeriod">
+						<xs:annotation>
+							<xs:documentation>This serves as a default ValidDatePeriod for all PTObjects in the document where no ValidDatePeriod is given. If a ValidDatePeriod is given for a PTObject this value will serve as outer limits of validity. Values outside this period will be truncated.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="EarliestValidFromDate" type="PT:Date" use="optional">
+								<xs:annotation>
+									<xs:documentation>Serves as default value for ValidFromDate for all PTObjects in document and as a limit as well. Earlier dates will be truncated to this value.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="LatestInvalidFromDate" type="PT:Date" use="optional">
+								<xs:annotation>
+									<xs:documentation>Serves as default value for InvalidFromDate for all PTObjects in document and as a limit as well. Later dates will be truncated to this value.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="WorkOnlyPeriods" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="WorkOnlyPeriod" type="PT:FixedPeriodOfDays" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Limits the validity for all PTObjects in the document.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:choice>
+						<xs:element name="ServiceCalendarRef" type="PT:ServiceCalendarRef"/>
+						<xs:element name="SpecialCalendarRef" type="PT:SpecialCalendarRef"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="SpecialCalendarRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="DefiningOrganisationalUnitRef" type="PT:OrganisationalUnitRef" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="ReferenceName" type="PT:Name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ServiceCalendarRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ParkingPlaceRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="GarageNumber">
+						<xs:annotation>
+							<xs:documentation>This is the number assigned to a garage in a garage utilisation by a defining contractor.  </xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningContractorRef" type="PT:ContractorRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:GarageNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="GarageName">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="OwningOrganisationRef" type="PT:OrganisationRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ParkingPointRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:JourneyPatternPointNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:JourneyPatternPointGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Tasks">
+		<xs:annotation>
+			<xs:documentation>Tasks can be either ServiceJourneys, Dead Runs or external tasks. External tasks indicates that a logical vehicle is occupied with something else than a defined ServiceJourney or DeadRun. For simplicity external tasks should be represented as Dead Runs</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="ServiceJourneyRef" type="PT:ExtendableServiceJourneyRef"/>
+			<xs:element name="ServiceJourneyDef" type="PT:ExtendableServiceJourneyDef"/>
+			<xs:element name="DeadRunRef" type="PT:ExtendableDeadRunRef"/>
+			<xs:element name="DeadRunDef" type="PT:ExtendableDeadRunDef"/>
+		</xs:choice>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="TransportAuthorityRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:attribute name="Number" type="PT:TransportAuthorityNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="OrganisationCode">
+						<xs:complexType>
+							<xs:attribute name="Code" type="PT:Code" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:TransportAuthorityGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="TenderRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ContractRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="ReferenceName" type="PT:Name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ContractorRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:ContractorNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="OrganisationCode">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ContractingTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Code" type="PT:Code" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:ContractorGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="CompanyRef">
+		<xs:annotation>
+			<xs:documentation> a reference to an Organisation of type Company</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:attribute name="OrganisationCode" type="PT:Code" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DepartmentRef">
+		<xs:annotation>
+			<xs:documentation>A reference to a department within an Organisation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="OrganisationRef" type="PT:OrganisationRef" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DepartmentInOrganisationRef">
+		<xs:annotation>
+			<xs:documentation>A reference to a department within an Organisation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="OrganisationRef" type="PT:OrganisationRef"/>
+				</xs:sequence>
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DepartmentOrContractorRef">
+		<xs:annotation>
+			<xs:documentation>A reference to a Department or Contractor</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="ContractorRef" type="PT:ContractorRef"/>
+					<xs:element name="DepartmentRef" type="PT:DepartmentRef"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OrganisationRef">
+		<xs:annotation>
+			<xs:documentation>A reference to a top level OrganisationalUnit</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="ContractorRef" type="PT:ContractorRef"/>
+					<xs:element name="Code">
+						<xs:complexType>
+							<xs:attribute name="Code" type="PT:Code" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OrganisationalUnitRef">
+		<xs:annotation>
+			<xs:documentation>A reference to an OrganisationalUnit on any level</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="OrganisationRef" type="PT:OrganisationRef"/>
+					<xs:element name="DepartmentRef" type="PT:DepartmentRef"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OrganisationalOrDepartmentUnitRef">
+		<xs:annotation>
+			<xs:documentation>A reference to an OrganisationalUnit on any level</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="OrganisationRef" type="PT:OrganisationRef"/>
+					<xs:element name="DepartmentRef" type="PT:DepartmentInOrganisationRef"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OrganisationalUnitRefs">
+		<xs:annotation>
+			<xs:documentation>References to OrganisationalUnits on any level</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="OrganisationRef" type="PT:OrganisationRef"/>
+			<xs:element name="DepartmentRef" type="PT:DepartmentInOrganisationRef"/>
+		</xs:choice>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="LineRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:LineNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:LineGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DirectionOfLineRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Direction">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="LineRef" type="PT:LineRef"/>
+							</xs:sequence>
+							<xs:attribute name="GenericDirection" type="PT:GenericDirection" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:DirectionGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Member">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+					<xs:element name="LineRef" type="PT:LineRef" minOccurs="1"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExtendableServiceJourneyRef">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="LineRef" type="PT:LineRef"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required">
+								<xs:annotation>
+									<xs:documentation>This must be the technical number that is unique within the scope of the TransportAuthority, not the public Designation!</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:ServiceJourneyGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExtendableDeadRunRef">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningContractorRef" type="PT:ContractorRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:DeadRunGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExtendableServiceJourneyDef">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObjectDef">
+				<xs:sequence>
+					<xs:element name="FirstCall" type="PT:BasicFirstCall"/>
+					<xs:element name="LastCall" type="PT:BasicLastCall"/>
+					<xs:element name="DirectionOfLineRef" type="PT:DirectionOfLineRef"/>
+					<xs:element name="Number" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>If there are two Service Journeys that work in parallel, then this element can be used to separate them. </xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExtendableDeadRunDef">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObjectDef">
+				<xs:sequence>
+					<xs:element name="FirstCall" type="PT:BasicFirstCall"/>
+					<xs:element name="LastCall" type="PT:BasicLastCall"/>
+					<xs:element name="Number" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>If there are two Dead Runs that work in parallel, then this element can be used to separate them. </xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceJourneyRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="LineRef" type="PT:LineRef"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required">
+								<xs:annotation>
+									<xs:documentation>This must be the technical number that is unique within the scope of the TransportAuthority, not the public Designation!</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:ServiceJourneyGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeadRunRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningContractorRef" type="PT:ContractorRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:DeadRunGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceJourneyDef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectDef">
+				<xs:sequence>
+					<xs:element name="FirstCall" type="PT:BasicFirstCall"/>
+					<xs:element name="LastCall" type="PT:BasicLastCall"/>
+					<xs:element name="DirectionOfLineRef" type="PT:DirectionOfLineRef"/>
+					<xs:element name="Number" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>If there are two Service Journeys that work in parallel, then this element can be used to separate them. </xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeadRunDef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectDef">
+				<xs:sequence>
+					<xs:element name="FirstCall" type="PT:BasicFirstCall"/>
+					<xs:element name="LastCall" type="PT:BasicLastCall"/>
+					<xs:element name="Number" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>If there are two Dead Runs that work in parallel, then this element can be used to separate them. </xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="Number" type="PT:JourneyNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PlaceRef">
+		<xs:annotation>
+			<xs:documentation>Reference to the name of a Place using a number</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:PlaceNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:PlaceGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StopRef">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="StopAreaRef" type="PT:StopAreaRef">
+					<xs:annotation>
+						<xs:documentation>This will always be converted to the set of journey pattern points valid for this stop area at time of import.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="StopPointRef" type="PT:StopPointRef">
+					<xs:annotation>
+						<xs:documentation>This will always be converted to the journey pattern point valid for this stop point at time of import.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="JourneyPatternPointRef" type="PT:JourneyPatternPointRef"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StopAreaRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:StopAreaNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:StopAreaGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="JourneyPatternPointRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:JourneyPatternPointNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:JourneyPatternPointGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StopPointRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="LocalNumber">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="StopAreaRef" type="PT:StopAreaRef"/>
+							</xs:sequence>
+							<xs:attribute name="LocalNumber" type="PT:StopPointNumber" use="required">
+								<xs:annotation>
+									<xs:documentation>Local StopPoint Number within the StopArea.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:annotation>
+							<xs:documentation>Either StopPointGid or JourneyPatternPointGid</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:StopPointGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="JourneyPatternPointNumber">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:JourneyPatternPointNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="User">
+		<xs:annotation>
+			<xs:documentation>Characteristics of a user.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Name" type="PT:Name" use="required"/>
+		<xs:attribute name="EMail" type="PT:EMail" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Application">
+		<xs:annotation>
+			<xs:documentation>Characteristics of a computer software.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Name" type="PT:Name" use="required"/>
+		<xs:attribute name="VersionComment" type="PT:Comment" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="CommunicationAddress">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required">
+					<xs:annotation>
+						<xs:documentation>For example a phonenumber "123456".</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Protocol" type="PT:CommunicationProtocol" use="required">
+					<xs:annotation>
+						<xs:documentation>For example "PHONE".</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="CommunicationProtocol">
+		<xs:annotation>
+			<xs:documentation>I. e. PHONE, FAX, TETRA</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="PHONE"/>
+			<xs:enumeration value="FAX"/>
+			<xs:enumeration value="SMS"/>
+			<xs:enumeration value="EMAIL"/>
+			<xs:enumeration value="PAGER"/>
+			<xs:enumeration value="TETRA"/>
+			<xs:enumeration value="MOBITEX"/>
+			<xs:enumeration value="MRS5000"/>
+			<xs:enumeration value="UNKNOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Origin">
+		<xs:choice>
+			<xs:element name="PlaceRef" type="PT:PlaceRef"/>
+			<xs:element name="Text">
+				<xs:complexType>
+					<xs:attribute name="Name" type="PT:Name" use="required"/>
+					<xs:attribute name="ShortName" type="PT:ShortName" use="optional">
+						<xs:annotation>
+							<xs:documentation>The short form of the primary name, used when there is limited space to display the name.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Destination">
+		<xs:choice>
+			<xs:element name="PlaceRef" type="PT:PlaceRef"/>
+			<xs:element name="Text">
+				<xs:complexType>
+					<xs:attribute name="Name" type="PT:Name" use="required"/>
+					<xs:attribute name="ShortName" type="PT:ShortName" use="optional">
+						<xs:annotation>
+							<xs:documentation>The short form of the primary name, used when there is limited space to display the name.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DestinationDisplay">
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="PrimaryDestination" type="PT:Destination">
+				<xs:annotation>
+					<xs:documentation>The primary destination, usually the name of end area, city or terminal of the VehicleJourney. It may or may not be the name of the last StopArea.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SecondaryDestination" minOccurs="0">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="PT:Destination">
+							<xs:attribute name="MeaningOfSecondaryDestination" type="PT:SecondaryDestinationType" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ExternalKeys" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Activation codes used by  different devices such as headsigns and announcement systems to display or announce destination from this stop and on. Can also be used for last stop messages and overriding next stop messages concerning this stop.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Key" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="ParameterData" type="PT:ParameterData" use="required">
+									<xs:annotation>
+										<xs:documentation>The codes that the driver should key in or that should be sent to the display system if it not is capable of handling free text format.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="DeviceName" type="PT:Name" use="required">
+									<xs:annotation>
+										<xs:documentation>The name of the device/system where the code is relevant.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="Type" type="PT:DisplayKeyType" use="optional" default="DESTINATION"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="ProductName" type="PT:Name" use="optional">
+			<xs:annotation>
+				<xs:documentation>Marketed name of the product.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="LineDesignation" type="PT:LineDesignation" use="optional">
+			<xs:annotation>
+				<xs:documentation>The designation (usually the Line Number) as it is displayed to the public.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="SymbolName" type="PT:Name" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceRequirement">
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="Capacity" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="MinimumSeatingsCount" type="PT:Count" use="optional"/>
+					<xs:attribute name="MinimumTotalCount" type="PT:Count" use="optional"/>
+					<xs:attribute name="MinimumWheelChairsCount" type="PT:Count" use="optional"/>
+					<xs:attribute name="MinimumPramsCount" type="PT:Count" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TrainSize" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="CarCount" type="PT:Count" use="optional"/>
+					<xs:attribute name="TrainLengthType" type="PT:TrainLengthType" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="BusSize" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="SizeType" type="PT:BusSizeType" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Engine" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="RequiredEmissionLevel" type="PT:EmissionLevel" use="optional"/>
+					<xs:attribute name="RequiredFuelType" type="PT:FuelType" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Accessibility" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="IsLowEntrance" type="PT:YesNo" use="optional" default="N"/>
+					<xs:attribute name="HasLiftOrRamp" type="PT:YesNo" use="optional" default="N"/>
+					<xs:attribute name="IsLowFloor" type="PT:YesNo" use="optional" default="N"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="TransportMode" type="PT:TransportMode" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Arrival">
+		<xs:attribute name="TypeOfArrival" type="PT:ArrivalType" use="optional" default="STOP_IF_ALIGHTING">
+			<xs:annotation>
+				<xs:documentation>Indicates conditions for arrivals at the Call.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DayOffset" type="PT:DayOffset" use="optional" default="0">
+			<xs:annotation>
+				<xs:documentation>The day number of the latest arrival time, counted from the defined operating day. The value will be 0 if the arrival takes place on the same date as the operating day of the journey. If the arrival is after midnight, and the journey starts before midnight, the value will be 1. If this attribute is left out, it is assumed that a value of 0 is implied. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="LatestTime" type="PT:TimeOffset" use="required">
+			<xs:annotation>
+				<xs:documentation>The latest arrival time accepted without regarding it as delayed.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Departure">
+		<xs:attribute name="TypeOfDeparture" type="PT:DepartureType" use="optional" default="STOP_IF_BOARDING">
+			<xs:annotation>
+				<xs:documentation>Indicates conditions for departures at the Call.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DayOffset" type="PT:DayOffset" use="optional" default="0">
+			<xs:annotation>
+				<xs:documentation>The day number of the  earliest departure time, counted from the defined operating day. The value will be 0 if the departure takes place on the same date as the  operating day of the journey. If the departure is after midnight, and the journey starts before midnight, the value will be 1.  If this attribute is left out, it is assumed that a value of 0 is implied. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="EarliestTime" type="PT:TimeOffset" use="required">
+			<xs:annotation>
+				<xs:documentation>The earliest permitted departure time.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="SimpleBasicCall">
+		<xs:annotation>
+			<xs:documentation>A call is the combined actions related to a bus starting, ending, standing or passing a journey pattern point. It will typically contain information about the arrival time and/or the departure time. For service journeys the first and last call must be to a stop point. For dead runs the first and last call must be either to a stop point or a parking point. Intermediate calls can also be made to via points.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObject">
+				<xs:choice>
+					<xs:element name="StopPointRef" type="PT:StopPointRef">
+						<xs:annotation>
+							<xs:documentation>The importing application will convert StopPointRef to the JourneyPatternPointRef that is associated at the time of import.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="JourneyPatternPointRef" type="PT:JourneyPatternPointRef"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="BasicCall">
+		<xs:annotation>
+			<xs:documentation>A call is the combined actions related to a bus starting, ending, standing or passing a journey pattern point. It will typically contain information about the arrival time and/or the departure time. For service journeys the first and last call must be to a stop point. For dead runs the first and last call must be either to a stop point or a parking point. Intermediate calls can also be made to via points.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:choice>
+					<xs:element name="StopPointRef" type="PT:StopPointRef">
+						<xs:annotation>
+							<xs:documentation>The importing application will convert StopPointRef to the JourneyPatternPointRef that is associated at the time of import.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="JourneyPatternPointRef" type="PT:JourneyPatternPointRef"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="BasicSequencedCall">
+		<xs:complexContent>
+			<xs:extension base="PT:BasicCall">
+				<xs:attribute name="SequenceNumber" type="PT:SequenceNumber" use="required">
+					<xs:annotation>
+						<xs:documentation>The sequence number must be 1 for the first call. The following calls must be provided in sequence and have sequence numbers that are increasing without gaps.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="BasicServiceJourneyCall">
+		<xs:annotation>
+			<xs:documentation>The Call-record contains information about one passage at a stop without any timing information.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:BasicSequencedCall">
+				<xs:sequence>
+					<xs:element name="NewDestinationDisplay" type="PT:DestinationDisplay" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Destination as it should be shown from this point and on and any specific display information concerning this stop.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NewServiceRequirement" type="PT:ServiceRequirement" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Service requirement from this point and on.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="BasicFirstCall">
+		<xs:complexContent>
+			<xs:extension base="PT:BasicCall">
+				<xs:sequence>
+					<xs:element name="Departure">
+						<xs:complexType>
+							<xs:attribute name="DayOffset" type="PT:DayOffset" use="optional" default="0">
+								<xs:annotation>
+									<xs:documentation>The day number of the  earliest departure time, counted from the defined operating day. The value will be 0 if the departure takes place on the same date as the  operating day of the journey. If the departure is after midnight, and the journey starts before midnight, the value will be 1.  If this attribute is left out, it is assumed that a value of 0 is implied. </xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="EarliestTime" type="PT:TimeOffset" use="required">
+								<xs:annotation>
+									<xs:documentation>The earliest permitted departure time.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="BasicLastCall">
+		<xs:complexContent>
+			<xs:extension base="PT:BasicCall">
+				<xs:sequence>
+					<xs:element name="Arrival">
+						<xs:complexType>
+							<xs:attribute name="DayOffset" type="PT:DayOffset" use="optional" default="0">
+								<xs:annotation>
+									<xs:documentation>The day number of the latest arrival time, counted from the defined operating day. The value will be 0 if the arrival takes place on the same date as the operating day of the journey. If the arrival is after midnight, and the journey starts before midnight, the value will be 1.  If this attribute is left out, it is assumed that a value of 0 is implied. </xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="LatestTime" type="PT:TimeOffset" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Location">
+		<xs:annotation>
+			<xs:documentation>A 2D coordinate. (3D optional)</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Northing" type="PT:Northing" use="required">
+			<xs:annotation>
+				<xs:documentation>The north/south co-ordinate value. The interpretation is dependent by the used Coordinate System.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Easting" type="PT:Easting" use="required">
+			<xs:annotation>
+				<xs:documentation>The east/west co-ordinate value. The interpretation is dependent by the used Coordinate System.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="CoordinateSystem" type="PT:Name" use="optional">
+			<xs:annotation>
+				<xs:documentation>An identification of the co-ordinate system used for the definition of the location of Mapping Points. Defaults to Topology.DefaultCoordinateSystem.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Notes">
+		<xs:sequence>
+			<xs:element name="Note" type="PT:DetailedNote" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DetailedNote">
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="ExternalRef" type="PT:ExternalNoteRef" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identification of this note in an external system.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Text" type="PT:Note" use="required"/>
+		<xs:attribute name="ConcernsArrivals" type="PT:YesNo" use="optional" default="Y"/>
+		<xs:attribute name="ConcernsDepartures" type="PT:YesNo" use="optional" default="Y"/>
+		<xs:attribute name="IsExposedToStaff" type="PT:YesNo" use="optional" default="Y">
+			<xs:annotation>
+				<xs:documentation>Yes means that the information is intended for drivers and other staff.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="IsPublic" type="PT:YesNo" use="optional" default="Y">
+			<xs:annotation>
+				<xs:documentation>Yes means that this information is intended for passenger information.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="IsExposedInPrintMedia" type="PT:YesNo" use="optional" default="Y"/>
+		<xs:attribute name="IsExposedInDynamicMedia" type="PT:YesNo" use="optional" default="Y"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ExternalNoteRef">
+		<xs:attribute name="NoteID" type="PT:Name" use="required">
+			<xs:annotation>
+				<xs:documentation>This is a unique note identification in scope of a certain external source system.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="SystemID" type="PT:Name" use="required">
+			<xs:annotation>
+				<xs:documentation>This is the agreed identification of the external source system.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="DayTypeCode">
+		<xs:annotation>
+			<xs:documentation>Code for daytype. Could be a PublicDayType or a SpecialDayType.</xs:documentation>
+		</xs:annotation>
+		<xs:union memberTypes="PT:PublicDayTypeCode PT:SpecialDayTypeCode"/>
+	</xs:simpleType>
+	<xs:simpleType name="PublicDayTypeCode">
+		<xs:annotation>
+			<xs:documentation>A Day Type Code that starts with a digit.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="8"/>
+			<xs:pattern value="\d{1}.*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ServiceDayTypeCode">
+		<xs:annotation>
+			<xs:documentation>A Day Type Code that starts with a digit, but is not the single digits 1 through 7. </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="8"/>
+			<xs:pattern value="[0,8,9].*|[1,2,3,4,5,6,7].+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SpecialDayTypeCode">
+		<xs:annotation>
+			<xs:documentation>A Day Type Code that starts with a letter. Observe that up to 16 characters is permitted.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:maxLength value="16"/>
+			<xs:pattern value="[A-Z,a-z].*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Abbreviation">
+		<xs:annotation>
+			<xs:documentation>User defined.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Initials">
+		<xs:annotation>
+			<xs:documentation>User defined.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="8"/>
+			<xs:pattern value="\p{Lu}*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ModificationType">
+		<xs:annotation>
+			<xs:documentation>General - A versiondocument can never affect objects that reside in another versionframe.
+			A versiondocument can never affect objects that reside outside the given timeframe. If objects exist both outside and inside the given timeframe, then parts outside the timeframe will remain, while those within will be affected.
+		
+			DEFINE - All objects not mentioned in this version document will be closed, those mentioned will be added or modified.
+			MODIFY - Objects mentioned in this version document will be added or modified.
+			DELETE - All objects mentioned will be closed.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="MODIFY"/>
+			<xs:enumeration value="DELETE"/>
+			<xs:enumeration value="DEFINE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BusSizeType">
+		<xs:annotation>
+			<xs:documentation>Code for generic bus sizes.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ARTICUL">
+				<xs:annotation>
+					<xs:documentation>Articulated bus (ledbuss)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BOGGIE">
+				<xs:annotation>
+					<xs:documentation>Boggie bus</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DDECKER">
+				<xs:annotation>
+					<xs:documentation>Double decker bus</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MINI">
+				<xs:annotation>
+					<xs:documentation>Mini bus</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SMALL">
+				<xs:annotation>
+					<xs:documentation>Small bus</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="STANDARD">
+				<xs:annotation>
+					<xs:documentation>Standard or normal bus</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Code">
+		<xs:annotation>
+			<xs:documentation>A user defined value, often used as an identifier.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Comment">
+		<xs:annotation>
+			<xs:documentation>An internal information not released to the public.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Count">
+		<xs:annotation>
+			<xs:documentation>A non-negative integer.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt"/>
+	</xs:simpleType>
+	<xs:simpleType name="SequenceNumber">
+		<xs:annotation>
+			<xs:documentation>The position in an ordered list of some kind. Synonym with ORDER according to Transmodel</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="10000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PosteriorSequenceNumber">
+		<xs:annotation>
+			<xs:documentation>The position in an ordered list of some kind, excluding the first position.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ContractorNumber">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="9999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ParameterData">
+		<xs:annotation>
+			<xs:documentation>Block of information whose structure is defined in external proprietary systems.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Date">
+		<xs:annotation>
+			<xs:documentation>An absolute date defined according to xs:date format. CCYY-MM-DD</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:simpleType name="DateTime">
+		<xs:annotation>
+			<xs:documentation>Date and time  defined according to xs:dateTime format. CCYY-MM-DDThh:mm:ss.sss</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:dateTime"/>
+	</xs:simpleType>
+	<xs:simpleType name="DayOffset">
+		<xs:annotation>
+			<xs:documentation>Used in combination with TimeOffset to express timespans larger than 24 hours</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Duration">
+		<xs:annotation>
+			<xs:documentation>A timespan</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:duration"/>
+	</xs:simpleType>
+	<xs:simpleType name="EMail">
+		<xs:annotation>
+			<xs:documentation>EMail-address.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:pattern value=".+@.+\..+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EmissionLevel">
+		<xs:annotation>
+			<xs:documentation>Emission standard according to European norms</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="EURO_I"/>
+			<xs:enumeration value="EURO_II"/>
+			<xs:enumeration value="EURO_III"/>
+			<xs:enumeration value="EURO_IV"/>
+			<xs:enumeration value="EURO_V"/>
+			<xs:enumeration value="EURO_VI"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ExternalID">
+		<xs:annotation>
+			<xs:documentation>External identification of this object.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ExternalSourceReference">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FuelType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="BATTERY">
+				<xs:annotation>
+					<xs:documentation>Electric (battery)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BIOGAS">
+				<xs:annotation>
+					<xs:documentation>Biogas</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CNG">
+				<xs:annotation>
+					<xs:documentation>Natural gas.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DIESEL">
+				<xs:annotation>
+					<xs:documentation>Diesel</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DIESELN">
+				<xs:annotation>
+					<xs:documentation>Diesel, standard</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DIESELL">
+				<xs:annotation>
+					<xs:documentation>Diesel, light</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="E85">
+				<xs:annotation>
+					<xs:documentation>Blend of 85% ethanol and 15% petrol</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ELECTRIC">
+				<xs:annotation>
+					<xs:documentation>Electric (overhead wire or equivalent)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="HYBRIDDB">
+				<xs:annotation>
+					<xs:documentation>Hybrid, diesel/battery</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="HYDROGEN">
+				<xs:annotation>
+					<xs:documentation>Hydrogen</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LPG">
+				<xs:annotation>
+					<xs:documentation>LPG.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PETROLL">
+				<xs:annotation>
+					<xs:documentation>Petrol, leaded</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PETROLUL">
+				<xs:annotation>
+					<xs:documentation>Petrol, unleaded</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="UNKNOWN">
+				<xs:annotation>
+					<xs:documentation>Fuel unknown</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GenericDirection">
+		<xs:annotation>
+			<xs:documentation>Used to separate routes (journey patterns) into two main groups running in opposite directions. The grouping could be based on such aspects as the direction being inward, outward or clockwise, anti-clockwise. </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ODD"/>
+			<xs:enumeration value="EVEN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  *********************************************************  -->
+	<!--  *********************************************************  -->
+	<xs:simpleType name="PointGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9022000000000000"/>
+			<xs:maxInclusive value="9025999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="TransportAuthorityGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="901000000000000"/>
+			<xs:maxInclusive value="9010999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="ContractorGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9013000000000000"/>
+			<xs:maxInclusive value="9013999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="StopPointGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9022000000000000"/>
+			<xs:maxInclusive value="9022999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="StopAreaGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9021000000000000"/>
+			<xs:maxInclusive value="9021999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="JourneyPatternPointGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9025000000000000"/>
+			<xs:maxInclusive value="9025999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="VehicleJourneyGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9015000000000000"/>
+			<xs:maxInclusive value="9016999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="ServiceJourneyGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9015000000000000"/>
+			<xs:maxInclusive value="9015999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="DeadRunGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9016000000000000"/>
+			<xs:maxInclusive value="9016999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="DirectionGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9014000000000000"/>
+			<xs:maxInclusive value="9014999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="DirectionOfLineGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9012000000000000"/>
+			<xs:maxInclusive value="9012999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="LineGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9011000000000000"/>
+			<xs:maxInclusive value="9011999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="VehicleGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9031000000000000"/>
+			<xs:maxInclusive value="9031999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="EmployeeGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9051000000000000"/>
+			<xs:maxInclusive value="9051999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="BlockGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9041000000000000"/>
+			<xs:maxInclusive value="9041999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="PlaceGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9091000000000000"/>
+			<xs:maxInclusive value="9091999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="DutyGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9061000000000000"/>
+			<xs:maxInclusive value="9061999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="BridgingDeviceGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9095000000000000"/>
+			<xs:maxInclusive value="9095999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="StationEntrancePointGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9023000000000000"/>
+			<xs:maxInclusive value="9023999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  -->
+	<xs:simpleType name="DeviationCaseGid">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minInclusive value="9076000000000000"/>
+			<xs:maxInclusive value="9076999999999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="JourneyNumber">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="99999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="JourneyPatternPointNumber">
+		<xs:annotation>
+			<xs:documentation>A unique number within a transport authority used for StopPoints, ViaPoints and ParkingPoints.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="99999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LineDesignation">
+		<xs:annotation>
+			<xs:documentation>The public identification of the Line, used in all passenger information.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LineNumber">
+		<xs:annotation>
+			<xs:documentation>Technical number for a Line. This number must be unique in the scope of a transport authority any given date. See also LineDesignation.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="9999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Meters">
+		<xs:annotation>
+			<xs:documentation>A distance or length in meters.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0.00"/>
+			<xs:maxInclusive value="9999999999.99"/>
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Name">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Percent">
+		<xs:annotation>
+			<xs:documentation> 0 - 100</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PersonRef">
+		<xs:annotation>
+			<xs:documentation> A reference to a person. For example social security number.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SecondaryDestinationType">
+		<xs:annotation>
+			<xs:documentation>Denotes how the second "row" of the destination text should be interpreted. I. e.  a via destination </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ENDS_AT">
+				<xs:annotation>
+					<xs:documentation>Denotes that the Secondary Destination is a more precise identification of the Primary Destination, like a terminal name when the Primary Destination is a city.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="VIA">
+				<xs:annotation>
+					<xs:documentation>Denotes that the Secondary Destination is a via-name.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TRANSFER_AT">
+				<xs:annotation>
+					<xs:documentation>Transfer at secondary destination and continue to primary destination.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CONTINUE_TO">
+				<xs:annotation>
+					<xs:documentation>Continue to secondary destination after transferring at primary destination.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MESSAGE">
+				<xs:annotation>
+					<xs:documentation>Denotes that the Secondary Destination is a message of some kind, like when announcing the VehicleJourney as an extra run.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="UNKNOWN">
+				<xs:annotation>
+					<xs:documentation>Denotes that the Secondary Destination is undefined.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HyperLinkName">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1024"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ShortName">
+		<xs:annotation>
+			<xs:documentation>.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopPointNumber">
+		<xs:annotation>
+			<xs:documentation>The local number within the StopArea</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopAreaNumber">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Time">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:attribute name="TimeOffset" type="PT:TimeOffset" use="required"/>
+				<xs:attribute name="DayOffset" type="PT:DayOffset" use="optional" default="0"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="TimeOffset">
+		<xs:annotation>
+			<xs:documentation>Time from midnight expressed as hh:mm:ss.sss</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:time"/>
+	</xs:simpleType>
+	<xs:simpleType name="TransportAuthorityNumber">
+		<xs:annotation>
+			<xs:documentation>Number of the transport authority. The number is provided by PubTrans User group for scandinavian implemetations.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TransportMode">
+		<xs:annotation>
+			<xs:documentation>Classification of transport systems. I. e. TRAIN, FERRY</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="BUS"/>
+			<xs:enumeration value="TRAM"/>
+			<xs:enumeration value="METRO"/>
+			<xs:enumeration value="TRAIN"/>
+			<xs:enumeration value="FERRY"/>
+			<xs:enumeration value="SHIP"/>
+			<xs:enumeration value="TAXI"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PlaceNumber">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="99999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YesNo">
+		<xs:annotation>
+			<xs:documentation>Attributes with names starting with Has... Is... or Requires...  uses this simple type. Y for Yes and N for No.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="N"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GarageNumber">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Note">
+		<xs:annotation>
+			<xs:documentation>A supplementary information.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CountryCode">
+		<xs:annotation>
+			<xs:documentation>ISO 3166-1-alpha-2 Country Codes. For example SE -Sweden, DK- Denmark and NO-Norway</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:length value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LanguageCode">
+		<xs:annotation>
+			<xs:documentation>ISO 639.1 Language Codes. For example sv -swedish,  da - danish, en -english, nn - nynorsk norwegian and nb -bokmål norwegian</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:language"/>
+	</xs:simpleType>
+	<xs:simpleType name="ArrivalType">
+		<xs:annotation>
+			<xs:documentation>Denotes conditions for alighting at a stop or flexible alighting up to this point.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="NO_STOP"/>
+			<xs:enumeration value="NO_ALIGHTING"/>
+			<xs:enumeration value="STOP_IF_ALIGHTING"/>
+			<xs:enumeration value="ALWAYS_STOP"/>
+			<xs:enumeration value="FLEXIBLE_ALIGHTING_UPTO_HERE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DepartureType">
+		<xs:annotation>
+			<xs:documentation>Denotes conditions for boarding at a stop or flexible boarding from this point.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="NO_STOP"/>
+			<xs:enumeration value="NO_BOARDING"/>
+			<xs:enumeration value="STOP_IF_BOARDING"/>
+			<xs:enumeration value="ALWAYS_STOP"/>
+			<xs:enumeration value="FLEXIBLE_BOARDING_FROM_HERE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DisplayKeyType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="DESTINATION">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to a certain destination. I.e. "Slussen" or "Linje 112; Slussen via Gärdet".</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OVERRIDING_STOPNAME">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to the name of the stop. I.e "Ekeby"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OVERRIDING_STOPMESSAGE">
+				<xs:annotation>
+					<xs:documentation>Code for data containing a message that should be announced or displayed instead of the normal STOPMESSAGE for this stop.  I.e  "Next stop Ekeby, thereafter no stop before Slussen"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ADDITIONAL_INFO">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to additional information concerning this stop. I.e  "Mind your step when disembarking" or "Last stop, all passengers must disembark" </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OVERRIDING_CHANGE_INFO">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to additional information concerning interchange at this stop. I.e  "Change to subway"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TrainLengthType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="SHORT">
+				<xs:annotation>
+					<xs:documentation/>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LONG">
+				<xs:annotation>
+					<xs:documentation/>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Coordinate">
+		<xs:annotation>
+			<xs:documentation>One dimension in a co-ordinate.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Northing">
+		<xs:annotation>
+			<xs:documentation>One dimension in a co-ordinate.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="PT:Coordinate"/>
+	</xs:simpleType>
+	<xs:simpleType name="Easting">
+		<xs:annotation>
+			<xs:documentation>One dimension in a co-ordinate.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="PT:Coordinate"/>
+	</xs:simpleType>
+</xs:schema>

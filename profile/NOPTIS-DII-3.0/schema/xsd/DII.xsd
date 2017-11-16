@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.0.14">
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2014.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+				 
+			Version 3.0    - First release version.	
+			Version 3.0.1	- Second release version.
+			Version 3.0.2 - Intermediate release awaiting approval.
+			Version 3.0.3 - Intermediate release awaiting approval.
+			Version 3.0.4 - Third release version.
+			Version 3.0.5 - Namespace adjusted.
+			Version 3.0.6 - Services.xsd changed. 
+			Version 3.0.7 - Extended support for notes. 
+			Version 3.0.8 - Description added to Direction of Line.
+			Version 3.0.9 - FareReferencePoint and centroid-coordinates for Zone added, HyperLinkName.
+			Version 3.0.10 - Changes in GroupOfLine.
+			Version 3.0.11 - Added Keys (Free attributes).
+			Version 3.0.12 - Corrections Keys.	
+			Version 3.0.13 - Changes in Calendar, Organisation and Services.	
+     		Version 3.0.14 - Changes in Services.	
+		</xs:documentation>
+	</xs:annotation>
+	<xs:include schemaLocation="DII-Organisations.xsd"/>
+	<xs:include schemaLocation="DII-Calendars.xsd"/>
+	<xs:include schemaLocation="DII-VersionFrames.xsd"/>
+	<xs:include schemaLocation="DII-Network.xsd"/>
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<xs:include schemaLocation="DII-Services.xsd"/>
+	<xs:include schemaLocation="DII-Timetable.xsd"/>
+	<xs:include schemaLocation="DII-VehicleSchedule.xsd"/>
+	<xs:include schemaLocation="DII-ProductionResources.xsd"/>
+	<xs:element name="OrganisationsVersion" type="PT:CurrentOrganisationsVersion"/>
+	<xs:element name="CalendarsVersion" type="PT:CurrentCalendarsVersion"/>
+	<xs:element name="VersionFramesVersion" type="PT:CurrentVersionFramesVersion"/>
+	<xs:element name="NetworkVersion" type="PT:CurrentNetworkVersion"/>
+	<xs:element name="ServicesVersion" type="PT:CurrentServicesVersion"/>
+	<xs:element name="TimetableVersion" type="PT:CurrentTimetableVersion"/>
+	<xs:element name="VehicleScheduleVersion" type="PT:CurrentVehicleScheduleVersion"/>
+	<xs:element name="ProductionResourcesVersion" type="PT:CurrentProductionResourcesVersion"/>
+	<xs:complexType name="CurrentOrganisationsVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:OrganisationsVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CurrentCalendarsVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:CalendarsVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CurrentVersionFramesVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:VersionFramesVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CurrentNetworkVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:NetworkVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CurrentServicesVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:ServicesVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CurrentTimetableVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:TimetableVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CurrentVehicleScheduleVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:VehicleScheduleVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CurrentProductionResourcesVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:ProductionResourcesVersion">
+				<xs:attribute name="DocumentLayoutVersion" type="PT:DocumentLayoutVersion" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="DocumentLayoutVersion">
+		<xs:annotation>
+			<xs:documentation>The set of values in the enumeration indicates the range of schema versions that this schema version is backward compatible with. Used to ensure that the schema version that an incoming document was validated against is not in conflict with this schema version.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="3.0.14"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

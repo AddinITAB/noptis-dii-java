@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.12.6">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2014.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+		
+Version 3.11- First release version
+		Version 3.12.1 
+			- Optional Origin added to ServiceJourney. 
+			- Annotation for ChangeFromRule modified
+			- Redundant attributes in ChangeToRule removed
+		Version 3.12.2
+			- MinimumDuration has default="PT0S"
+			- TransportMode moved to VehicleJourney complex type.
+			- Annotation on Start and End elements adjusted.
+			- Annotation added concerning ContractorRef.
+		Version 3.12.3	
+			- Calls element is not optional in DeadRun
+			 - Namespace adjusted
+		Version 3.12.4
+				-TransportMode moved from VehicleJourney complex type. Removed incorrect TransportMode default value for ServiceJourney
+		Version 3.12.5			
+				- Annotation in MinimumChangeTimeDuration corrected.			
+				- Element Notes added to element VehicleJourney 
+				- Element Notes replaces attribute PublicNote in element Call
+		Version 3.12.6
+				-Added the use of Keys
+		</xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="TimetableVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:CompetitiveVersion">
+				<xs:sequence>
+					<xs:element name="DefaultContractorRef" type="PT:ContractorRef" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The company that operates the vehicles. This value is overridden if an explicit value is provided in element ContractorRef under VehicleJourney.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VehicleJourneys" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>There can be any number of Vehicle Journeys in a timetable. There exists two types of Vehicle Journeys; ServiceJourneys that carries passengers, and DeadRuns that are non-service movement of vehicles from one point to another.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:choice maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>A timetable can also contain zero Vehicle Journeys: This can be used to cancel a timetable during a specified period.</xs:documentation>
+								</xs:annotation>
+								<xs:element name="DeadRun" type="PT:DeadRun">
+									<xs:annotation>
+										<xs:documentation>A DeadRun is non-service movement of a vehicle from one point to another.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="ServiceJourney" type="PT:ServiceJourney">
+									<xs:annotation>
+										<xs:documentation>A ServiceJourney is a passenger carrying journey.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="ContractReferenceName" type="PT:Name" use="optional">
+					<xs:annotation>
+						<xs:documentation>Refers to the contract  that regulates payment for the production in TimetableVersion.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="JourneyFilter">
+		<xs:choice>
+			<xs:element name="ServiceJourneyRef" type="PT:ServiceJourneyRef"/>
+			<xs:element name="ServiceJourneyDef" type="PT:ServiceJourneyDef"/>
+			<xs:element name="JourneyOnDirectionOfLineDef">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="PT:PTObjectDef">
+							<xs:choice>
+								<xs:element name="DirectionOfLineRef" type="PT:DirectionOfLineRef"/>
+							</xs:choice>
+							<xs:attribute name="MaxOffsetDuration" type="PT:Duration" use="required">
+								<xs:annotation>
+									<xs:documentation> How far in time to look for matching journeys. The offset duration is counted from the feeder journeys latest arrival time, to the fetcher journeys earliest departure time.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ChangeFromRule">
+		<xs:annotation>
+			<xs:documentation>The ChangeFromRule-records contain information about possible or desired interchanges. The information in this record is used to determine the actual interchanges and the dynamic behaviour when timetable deviation occurs.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="FeederJourneyFilter" type="PT:JourneyFilter"/>
+			<xs:element name="FeederStopRef" type="PT:StopRef"/>
+		</xs:sequence>
+		<xs:attribute name="MaximumWaitTimeDuration" type="PT:Duration" use="optional" default="PT0S">
+			<xs:annotation>
+				<xs:documentation>The maximum time that this VehicleJourney may wait over the Earliest Departure Time if the other VehicleJourney is delayed.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="AlertControlCentreAfterDuration" type="PT:Duration" use="optional">
+			<xs:annotation>
+				<xs:documentation>If the wait time exceeds this value, control centre should act. This attribute is only of interest in combination with long MaximumWaitTimeDurations.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="MaximumDynamicReplanDuration" type="PT:Duration" use="optional">
+			<xs:annotation>
+				<xs:documentation>The time frame in under which dynamic re-planning of interchanges may be performed if the original connection fails.This is resolved in realtime taking predicted delays of feeders and fetcher journeys into consideration. This means that additonal feeder journeys might be served by this journey.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="IsContinuingVehicle" type="PT:YesNo" use="optional" default="N">
+			<xs:annotation>
+				<xs:documentation>In some cases a connection really is a continuing vehicle, which means that an interchanging passenger should stay on board the vehicle.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="IsExposedToStaff" type="PT:YesNo" use="optional" default="Y">
+			<xs:annotation>
+				<xs:documentation>Yes means that connections that are created from this interchange rule may be included in the information to drivers and other staff when appropriate.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="IsPublic" type="PT:YesNo" use="optional" default="Y">
+			<xs:annotation>
+				<xs:documentation>Yes means that connections that are created from this interchange rule may be included in passenger information when appropriate.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="RequiresMatchingToRule" type="PT:YesNo" use="optional" default="N"/>
+		<xs:attribute name="MinimumChangeTimeDuration" type="PT:Duration" use="optional">
+			<xs:annotation>
+				<xs:documentation>The minimum time required from the Latest Arrival Time of the other Call to an Earliest Departure Time of this Call. This time may include any judgement of any relevant factors, including any transfers time between StopAreas. This value will default to the ConnectionLink duration if omitted. If there is no valid ConnectionLink defined and the change takes place within the same StopArea then the value will default to DefaultInterchangeDuration of the StopArea</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ChangeToRule">
+		<xs:annotation>
+			<xs:documentation>The ChangeToRule-records contain information about possible or desired interchanges. The information in this record is used to determine the actual interchanges and the dynamic behaviour when timetable deviation occurs.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="FetcherJourneyFilter" type="PT:JourneyFilter"/>
+			<xs:element name="FetcherStopRef" type="PT:StopRef"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeadRunCall">
+		<xs:complexContent>
+			<xs:extension base="PT:BasicSequencedCall">
+				<xs:sequence>
+					<xs:element name="Arrival" type="PT:Arrival" minOccurs="0"/>
+					<xs:element name="Departure" type="PT:Departure" minOccurs="0"/>
+					<xs:element name="Notes" type="PT:Notes" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Additional information that can not be expressed in data.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="MinimumDuration" type="PT:Duration" use="optional" default="PT0S">
+					<xs:annotation>
+						<xs:documentation>The minimum duration of a Call in seconds. Could be used to enhance forecasts.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceJourneyCall">
+		<xs:annotation>
+			<xs:documentation>The Call-record contains information about one passage at a stop.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:BasicServiceJourneyCall">
+				<xs:sequence>
+					<xs:element name="Arrival" type="PT:Arrival" minOccurs="0"/>
+					<xs:element name="Departure" type="PT:Departure" minOccurs="0"/>
+					<xs:element name="ChangeFromRules" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ChangeFromRule" type="PT:ChangeFromRule" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ChangeToRules" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The definition of interchanges could optionally be regarded as a "contract" between two Vehicle Journeys, where it is required to have a matching  ChangeToRule-record for each ChangeFromRule.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ChangeToRule" type="PT:ChangeToRule" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Notes" type="PT:Notes" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Additional information that can not be expressed in data.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="MinimumDuration" type="PT:Duration" use="optional" default="PT0S">
+					<xs:annotation>
+						<xs:documentation>The minimum duration of a Call in seconds.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="IsTimingPoint" type="PT:YesNo" use="optional" default="N">
+					<xs:annotation>
+						<xs:documentation>Indicates that this Call is at a Timing Point.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="VehicleJourney">
+		<xs:annotation>
+			<xs:documentation>A general supertype for ServiceJourney and DeadRun in Timetable.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="Start" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Can be used if the vehicle is contracted to be/needs to be at the first stop earlier than the earliest departure time. 
+If this element is omitted the start time will default to the earliest of times on the first call, be it the latest arrival time or the earliest departure time.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DestinationDisplay" type="PT:DestinationDisplay" minOccurs="0"/>
+								<xs:element name="ServiceRequirement" type="PT:ServiceRequirement" minOccurs="0"/>
+								<xs:element name="Time" type="PT:Time" minOccurs="0"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="End" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Can be used if the vehicle is contracted to be/needs to remain at the stop after the last stop is reached. 
+In some instances it could be used as a simplified way to express that there is an additional turn around time needed to get the vehicle in position for the next journey. (This turn around activity could alternatively be modelled using explicit DeadRuns.) If this element is omitted the end time will default to the latest of the times on the last call, be it the latest arrival time or the earliest departure time.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Time" type="PT:Time"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ContractorRef" type="PT:ContractorRef" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The company that operates the vehicle. If this element is omitted then the value provided in DefaultContractorRef is used. It is required that at least one of these values are provided for vehicle journeys of type Dead Run.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DayTypes" type="PT:DayTypes">
+						<xs:annotation>
+							<xs:documentation>The day types that this vehicle journey normally is operated on.  </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="OperatingDayExceptions" type="PT:OperatingDayExceptions" minOccurs="0"/>
+					<xs:element name="Accounting" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="ContractReferenceName" type="PT:Name" use="optional"/>
+							<xs:attribute name="DistanceMeters" type="PT:Meters" use="optional">
+								<xs:annotation>
+									<xs:documentation>A distance used for accounting of this journey. The time could exceed the actual distance of the combined route links to include additonal movements.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="Duration" type="PT:Duration" use="optional">
+								<xs:annotation>
+									<xs:documentation>A timespan used for accounting of this journey. The time could exceed the actual travelling time to include other activities.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="Type" type="PT:AccountingType" use="optional"/>
+							<xs:attribute name="ArticleCode" type="PT:Code" use="optional">
+								<xs:annotation>
+									<xs:documentation>In some systems this could be used to express the paid "bustype". In other systems this information will instead be retrieved from ServiceRequirement</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Notes" type="PT:Notes" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Additional information that apply to all calls and that can not be expressed in data.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="Number" type="PT:JourneyNumber" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeadRun">
+		<xs:annotation>
+			<xs:documentation>A non-service Vehicle Journey. Dead runs can start and end at ParkingPoints or StopPoints.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:VehicleJourney">
+				<xs:sequence>
+					<xs:element name="Calls">
+						<xs:annotation>
+							<xs:documentation>There will typically be only two Calls, the start and end point of the DeadRun</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Call" type="PT:DeadRunCall" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="TransportMode" type="PT:TransportMode" use="optional" default="BUS">
+					<xs:annotation>
+						<xs:documentation>The transport mode used for this vehicle journey, i.e. bus, train, ferry etc.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceJourney">
+		<xs:complexContent>
+			<xs:extension base="PT:VehicleJourney">
+				<xs:sequence>
+					<xs:choice>
+						<xs:element name="LineRef" type="PT:LineRef">
+							<xs:annotation>
+								<xs:documentation>The Line number of the ServiceJourney. Direction of Line is deducted from odd/even journey number. Journeys with odd numbers will be assigned to generic direction 1. </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="DirectionOfLineRef" type="PT:DirectionOfLineRef">
+							<xs:annotation>
+								<xs:documentation>A code for the direction in which the ServiceJourney runs on a Line.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+					<xs:element name="Origin" type="PT:Origin" minOccurs="0"/>
+					<xs:element name="AdvanceOrderCondition" type="PT:AdvanceOrderCondition" minOccurs="0"/>
+					<xs:element name="Calls">
+						<xs:annotation>
+							<xs:documentation>Calls contains an ordered collection of passages of points.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Call" type="PT:ServiceJourneyCall" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Advertisement" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="PrintMedia" minOccurs="0">
+									<xs:complexType>
+										<xs:attribute name="IsExposed" type="PT:YesNo" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="DynamicMedia" minOccurs="0">
+									<xs:complexType>
+										<xs:attribute name="InformPassengersCondition" type="PT:InformPassengersCondition" use="required"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="TransportMode" type="PT:TransportMode" use="optional">
+					<xs:annotation>
+						<xs:documentation>The transport mode used for this vehicle journey, i.e. bus, train, ferry etc.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="AdvanceOrderCondition">
+		<xs:annotation>
+			<xs:documentation>MinimumDaysInAdvance and LatestAbsoluteTime are handled as a pair. If LatestTimeSpanInAdvanceDuration is also defined the most restrictive criterion applies.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ControllingOrganisationalUnitRef" type="PT:DepartmentOrContractorRef" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The organisational unit that manages the order. Default to the organisational unit that controls the Line.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="MinimumDaysInAdvance" type="xs:nonNegativeInteger" use="optional">
+			<xs:annotation>
+				<xs:documentation>The number of days before the OperatingDay that an order must be placed, called last order day.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="LatestAbsoluteTime" type="PT:TimeOffset" use="optional">
+			<xs:annotation>
+				<xs:documentation>The absolute time on the last order day that an order must be placed.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="LatestTimeSpanInAdvance" type="PT:Duration" use="optional">
+			<xs:annotation>
+				<xs:documentation>The relative time in minutes to the start of a ServiceJourney that an order must be placed.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="IsPublic" type="PT:YesNo" use="optional">
+			<xs:annotation>
+				<xs:documentation>Yes if the order should be available for the public to book. No if decision is internal to the TransportAuthority.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="PublicNote" type="PT:Note" use="optional">
+			<xs:annotation>
+				<xs:documentation>Additional information about the condition.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="InternalNote" type="PT:Note" use="optional">
+			<xs:annotation>
+				<xs:documentation>Additional information about the condition.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="AccountingType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="PAY_BY_SCHEDULE"/>
+			<xs:enumeration value="PAY_IF_SIGNED_ON"/>
+			<xs:enumeration value="DEDUCT_IF_NOT_SIGNED_ON"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InformPassengersCondition">
+		<xs:annotation>
+			<xs:documentation>Describes under which conditions passengers should be informed.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ALWAYS"/>
+			<xs:enumeration value="ONLY_IF_ORDERED"/>
+			<xs:enumeration value="ONLY_IF_SIGNED_ON"/>
+			<xs:enumeration value="NEVER"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

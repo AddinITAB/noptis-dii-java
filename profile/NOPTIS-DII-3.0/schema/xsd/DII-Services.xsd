@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.8.10">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2014.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+				 
+		Version 3.07 - First release version.
+		Version 3.8.1 
+			- Attribute IsMonitored added to Line with default N.
+			- LineRef is required in LineContractor.
+		Version 3.8.2	
+			- Complex type PeriodOfDays used instead of identically defined DatePeriod.
+			- Simple type PosteriorSequenceNumber used in place of SequenceNumber where applicable.
+			- Redundant SequnceNumber attribute removed from PointInJourneyPattern.
+		Version 3.8.3	
+			 - Namespace adjusted.
+		Version 3.8.4
+			-ServiceRequirementPatterns element removed from ServiceVersion.
+		Version 3.8.5
+			-Enumeration values Presentation and Other added to simpleType PurposeOfLineGrouping.
+		Version 3.8.6
+			-Attribute Description added to DirectonOfLine
+		Version 3.8.7
+			-Attribute ExternalID added to Line			
+			-Changed simpleType PurposeOfLineGrouping to StringOrPurposeOfLineGrouping that allows strings
+			-Changed members in GroupOfLines to use the type PT:Member instead of PT:LineRef
+		Version 3.8.8
+			-Added Keys for Line, DirectionOfLine, LineContractors, GroupOfLine, Members and DestinationPattern
+		Version 3.8.9
+			-Added Contracts,Tenders, adjusted LineContractor
+		Version 3.8.10
+			-Added Keys for NamedJourneyPattern, changed PointInJourneyPattern to be SimpleBasicCall
+			
+		</xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServicesVersion">
+		<xs:annotation>
+			<xs:documentation>Contains information about Lines and GroupOfLines.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ConsecutiveVersion">
+				<xs:sequence>
+					<xs:element name="Tenders" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Tender" type="PT:Tender" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Contracts" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Contract" type="PT:Contract" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Lines" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Line" type="PT:Line" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="LineContractors" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="LineContractor" type="PT:LineContractor" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="GroupsOfLines" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="GroupOfLines" type="PT:GroupOfLines" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="NamedJourneyPatterns" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="NamedJourneyPattern" type="PT:NamedJourneyPattern" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="DestinationPatterns" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DestinationPattern" type="PT:DestinationPattern" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Line">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DirectionsOfLine">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DirectionOfLine" type="PT:DirectionOfLine" maxOccurs="2"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Number" type="PT:LineNumber" use="required"/>
+				<xs:attribute name="Designation" type="PT:LineDesignation" use="required"/>
+				<xs:attribute name="Name" type="PT:Name" use="optional"/>
+				<xs:attribute name="DefaultTransportMode" type="PT:TransportMode" use="required"/>
+				<xs:attribute name="IsMonitored" type="PT:YesNo" use="optional" default="N"/>
+				<xs:attribute name="ExternalID" type="PT:Name" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Tender">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="PromotedByTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+				<xs:attribute name="Note" type="PT:Note" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Contract">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="PromotedToContractorRef" type="PT:ContractorRef"/>
+					<xs:element name="PromotedByTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="IncludedInTenderRef" type="PT:TenderRef" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="ReferenceName" type="PT:Name" use="required"/>
+				<xs:attribute name="Name" type="PT:Name" use="optional"/>
+				<xs:attribute name="Note" type="PT:Note" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="NamedJourneyPatternRef">
+		<xs:choice>
+			<xs:element name="DirectionOfLineRef" type="PT:DirectionOfLineRef">
+				<xs:annotation>
+					<xs:documentation>Required element if NamedJourneyPattern is a ServiceJourneyPattern.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ContractorRef" type="PT:ContractorRef"/>
+		</xs:choice>
+		<xs:attribute name="ReferenceName" type="PT:Name" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DestinationPattern">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObject">
+				<xs:sequence>
+					<xs:element name="StartDestinationDisplay">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="PT:DestinationDisplay"/>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="NewDestinationDisplays" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="NewDestinationDisplay" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:complexContent>
+											<xs:extension base="PT:DestinationDisplay">
+												<xs:attribute name="FromJourneyPatternSequenceNumber" type="PT:PosteriorSequenceNumber" use="required"/>
+											</xs:extension>
+										</xs:complexContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+					<xs:element name="NamedJourneyPatternRef" type="PT:NamedJourneyPatternRef"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="NamedJourneyPattern">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="PointsInJourneyPattern">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="PointInJourneyPattern" minOccurs="2" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:complexContent>
+											<xs:extension base="PT:PointInJourneyPattern"/>
+										</xs:complexContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+					<xs:choice>
+						<xs:element name="DirectionOfLineRef" type="PT:DirectionOfLineRef">
+							<xs:annotation>
+								<xs:documentation>Required element if NamedJourneyPattern is a ServiceJourneyPattern.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ContractorRef" type="PT:ContractorRef"/>
+					</xs:choice>
+				</xs:sequence>
+				<xs:attribute name="ReferenceName" type="PT:Name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="GroupOfLines">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="Members" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Member" type="PT:Member" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ManagingTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+				<xs:attribute name="Code" type="PT:Code" use="optional"/>
+				<xs:attribute name="PurposeOfLineGrouping" type="PT:StringOrPurposeOfLineGrouping" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="LineContractor">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="ContractorRef" type="PT:ContractorRef"/>
+					<xs:element name="LineRef" type="PT:LineRef"/>
+					<xs:element name="ContractRef" type="PT:ContractRef" minOccurs="0"/>
+					<xs:element name="ControlCentreRef" type="PT:OrganisationalUnitRef" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="LevelOfOperation" type="PT:LevelOfOperation" use="optional" default="ALL"/>
+				<xs:attribute name="IsDefault" type="PT:YesNo" use="optional" default="Y">
+					<xs:annotation>
+						<xs:documentation>Used to point out the contractor that has the main responsibility for a line worked by several contractors. </xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DirectionOfLine">
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="GenericDirection" type="PT:GenericDirection" use="required"/>
+		<xs:attribute name="Name" type="PT:Name" use="optional"/>
+		<xs:attribute name="Description" type="PT:Note" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PointInJourneyPattern">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:SimpleBasicCall">
+				<xs:sequence>
+					<xs:element name="Arrival" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="TypeOfArrival" type="PT:ArrivalType" use="optional" default="STOP_IF_ALIGHTING"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Departure" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="TypeOfDeparture" type="PT:DepartureType" use="optional" default="STOP_IF_BOARDING"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="LevelOfOperation">
+		<xs:annotation>
+			<xs:documentation>Defines the level of operation for a contractor on a line. ALL means that the line is exclusively operated by one contractor.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ALL"/>
+			<xs:enumeration value="MOST"/>
+			<xs:enumeration value="MANY"/>
+			<xs:enumeration value="SOME"/>
+			<xs:enumeration value="OCCASIONAL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringOrPurposeOfLineGrouping">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>Lines are allowed to be included in one or multiple Group of Lines having the same Purpose of Line Grouping. Purposes that only allow single membership are denoted below.</xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="DISTRICT">
+						<xs:annotation>
+							<xs:documentation>Grouping of lines in geographic districts. Examples: Linjer på/till Värmdö, Linjer i City.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="MARKET">
+						<xs:annotation>
+							<xs:documentation>Grouping of lines into administrative marketing groups/responsibilities. Examples: Marknadsområde Norr, City, Söder.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="PRODUCT">
+						<xs:annotation>
+							<xs:documentation>Grouping of lines into product identities: Examples: S-BUS, A-BUS, Expressbuss, Flextrafiken, Stombuss. Only single membership allowed.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="TRAFFIC">
+						<xs:annotation>
+							<xs:documentation>Grouping of lines into traffic types: Examples: Pendeltåg, Regionaltåg, Tunnelbana, Stadsbuss, Förortsbuss.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="PRESENTATION">
+						<xs:annotation>
+							<xs:documentation>Grouping of lines that should be presented using the name of the Line Group thus overriding Line.Name etcetera.
+			</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="OTHER">
+						<xs:annotation>
+							<xs:documentation>Grouping of lines for other purposes.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+</xs:schema>

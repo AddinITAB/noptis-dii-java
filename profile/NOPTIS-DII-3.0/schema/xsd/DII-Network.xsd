@@ -1,0 +1,1299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.11.9">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2012.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+				 
+		Version 3.10 First release version		
+		Version 3.11.1 
+			- StopPointDesignation is 1-4 characters long.
+		Version 3.11.2
+			 - The order of elements in NetworkVersion is changed.
+			 - The StationEntranceLinks element is moved and restructured.
+			 - TIMING enumeration value replaces REPORT in simple type PointOnLinkType.
+		Version 3.11.3
+			 - The order of elements in NetworkVersion is changed.
+			 - SimpleType ZoneNumber restriction corrected.
+		 Version 3.11.4
+			 - ParkingPointType enumeration value removed.
+			 - Rediundant attribute Type in ParkingPoint removed.
+			 - DeviceName is required attribute in StopPointKey.
+			 - DeviceName is required attribute in Action.
+			 - StopAreaType enumeration UNSPECIFIED replaced by UNKNOWN.
+			 - StopPointType enumeration UNSPECIFIED replaced by UNKNOWN.
+			 - Namespace adjusted.
+		Version 3.11.5
+			- Attributes uses specific type of Gid instead of general Gid type.
+			- Enumerations added to the simpleType StopAreaType.
+			- Enumerations added to the simpleType ActionType.
+			- Enumeration added to the simpleType ZoneType.
+	Version 3.11.6
+			- StopPointRef required in StopPointKey .
+	Version 3.11.7
+			Enumeration FAREREFERENCEPOINT added to the simpleType ZoneType
+			Element Centroid added to Zone.
+			Attribute Name in HyperLink changed type
+	Version 3.11.8
+				Added the use of Keys						
+	Version 3.11.9
+				Correction -  Keys						
+		</xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="NetworkVersion">
+		<xs:complexContent>
+			<xs:extension base="PT:ConsecutiveVersion">
+				<xs:sequence>
+					<xs:element name="Zones" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Zone" type="PT:Zone" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="EquipmentProfiles" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="EquipmentProfile" type="PT:EquipmentProfile" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Describes combinations of available equipment used for stop points</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Places" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Place" type="PT:OfficialPlace" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>A description of all geographical elements that are approved for use as the origin and the destination of a passenger trip. Only those places that are  likely to be used as parts of DestinationDisplay texts need to be provided.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ParkingPoints" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ParkingPoint" type="PT:ParkingPoint" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Defines a JourneyPatternPoint where vehicles may stay unattended for a long time. A ParkingPoint can be located at a Garage or elsewhere. It can be used as the end or start of a DeadRun .</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ViaPoints" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ViaPoint" type="PT:ViaPoint" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Defines a JourneyPatternPoint that can be used to clarify the path going from one StopPoint to another.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="StopAreas" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="StopArea" type="PT:StopArea" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="RouteLinks" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="RouteLink" type="PT:RouteLink" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="StopPointKeys" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="StopPointKey" type="PT:StopPointKey" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="StopAreaUtilisations" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="StopAreaUtilisation" type="PT:StopAreaUtilisation" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>An alternative description of a StopArea. Using StopAreaUtilisations several TransportAuthoritys can co-operate and still use their own identification for a StopArea even if it is defined by another Transport Authority.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Facilities" minOccurs="0">
+						<xs:complexType>
+							<xs:choice maxOccurs="unbounded">
+								<xs:element name="GeneralFacility" type="PT:Facility"/>
+								<xs:element name="CarPark" type="PT:CarPark"/>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Sites" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Site" type="PT:Site" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>A well known PLACE to which a passenger may refer to indicate the origin or the destination of a trip. A site can be used as a synonym for neighbouring StopAreas</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="StationEntrancePoints" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="StationEntrancePoint" type="PT:StationEntrancePoint" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>A StationEntrancePoint is a point where a passenger can enter or leave a station. Used as endpoint of transferlink to stop points inside stations.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="BridgingDevices" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="BridgingDevice" type="PT:BridgingDevice" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>A BridgingDevice is a  device used to pass an obstacle on a TransferLink. A BridgingDevice could for example be an elevator, an escalator or a stairway.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="StationEntranceLinks" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:annotation>
+									<xs:documentation>Listing of all defined StationEntranceLinks connecting this StopPoint with entrance points. Only used for stop points inside stations.</xs:documentation>
+								</xs:annotation>
+								<xs:element name="StationEntryLink" type="PT:StationEntryLink" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Indicates that there exists a possibility for a passenger entering the station at a certain StationEntrance to depart from this StopPoint.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="StationExitLink" type="PT:StationExitLink" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Indicates that there exists a possibility for a passenger arriving at this StopPoint to leave the Station through a certain StationEntrance.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ConnectionLinks" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ConnectionLink" type="PT:ConnectionLink" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation> ConnectionLink is a type of TransferLink defining a possibility for a passenger arriving at a StopPoint to continue his or her Trip from another StopPoint.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="DefaultCoordinateSystemName" type="PT:Name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="CarPark">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:Facility">
+				<xs:attribute name="IndoorCapacityCount" type="PT:Count" use="optional" default="0"/>
+				<xs:attribute name="IsManned" type="PT:YesNo" use="optional"/>
+				<xs:attribute name="OutdoorCapacityCount" type="PT:Count" use="optional" default="0"/>
+				<xs:attribute name="HasSurveillance" type="PT:YesNo" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Facility">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="NeighbouringStopAreaRefs" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="NeighbouringStopAreaRef" type="PT:StopAreaRef" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="HyperLinks" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="HyperLink" type="PT:HyperLink" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Location" type="PT:Location" minOccurs="0"/>
+					<xs:element name="OpeningHours" type="PT:OpeningHours" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="BridgingDevice">
+		<xs:annotation>
+			<xs:documentation>Stairs, elevators, escalators and conveyor-belts are means to pass certain obstacles along TransferLinks.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="AlternateBridgingDeviceRefs" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="AlternateBridgingDeviceRef" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>The order the AlternateBridgingDevices are provided in, indicates in which order they should be attempted.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:complexContent>
+											<xs:extension base="PT:BridgingDeviceRef">
+												<xs:attribute name="AdditonalPassageDuration" type="PT:Duration" use="optional"/>
+												<xs:attribute name="SequenceNumber" type="PT:SequenceNumber" use="required"/>
+											</xs:extension>
+										</xs:complexContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="StopAreaRef" type="PT:StopAreaRef" minOccurs="0"/>
+					<xs:element name="OpeningHours" type="PT:OpeningHours" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="optional"/>
+				<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+				<xs:attribute name="Number" type="PT:BridgingDeviceNumber" use="required"/>
+				<xs:attribute name="Type" type="PT:BridgingDeviceType" use="required"/>
+				<xs:attribute name="PassageDirection" type="PT:PassageDirection" use="required"/>
+				<xs:attribute name="PassageDuration" type="PT:Duration" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="BridgingDeviceRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Number" type="PT:BridgingDeviceNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:BridgingDeviceGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Place" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Number" type="PT:PlaceNumber" use="required"/>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+				<xs:attribute name="ShortName" type="PT:ShortName" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OfficialPlace">
+		<xs:complexContent>
+			<xs:extension base="PT:Place">
+				<xs:attribute name="Type" type="PT:PlaceType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Site">
+		<xs:annotation>
+			<xs:documentation>A well known PLACE to which a passenger may refer to indicate the origin or the destination of a trip</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:Place">
+				<xs:sequence>
+					<xs:element name="NeighbouringStopAreaRefs" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="NeighbouringStopAreaRef" type="PT:StopAreaRef" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Location" type="PT:Location" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Defines the geographical location of the site</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="InternalComment" type="PT:Comment" use="optional"/>
+				<xs:attribute name="PublicNote" type="PT:Note" use="optional"/>
+				<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ParkingPoint">
+		<xs:complexContent>
+			<xs:extension base="PT:JourneyPatternPoint"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ViaPoint">
+		<xs:complexContent>
+			<xs:extension base="PT:JourneyPatternPoint"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StopPoint">
+		<xs:complexContent>
+			<xs:extension base="PT:JourneyPatternPoint">
+				<xs:sequence>
+					<xs:element name="EquipmentProfileRef" type="PT:EquipmentProfileRef" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation> </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="LocalNumber" type="PT:StopPointNumber" use="required">
+					<xs:annotation>
+						<xs:documentation>The local number within the StopArea.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Name" type="PT:Name" use="optional">
+					<xs:annotation>
+						<xs:documentation>The full name of the StopPoint.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="ShortName" type="PT:ShortName" use="optional">
+					<xs:annotation>
+						<xs:documentation>The short name used where a limited number of characters for presentation is available.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Designation" type="PT:StopPointDesignation" use="optional">
+					<xs:annotation>
+						<xs:documentation>The local identification to the public.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Type" type="PT:StopPointType" use="required">
+					<xs:annotation>
+						<xs:documentation>The main characteristic of the StopPoint.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="LengthMeters" type="PT:Meters" use="optional">
+					<xs:annotation>
+						<xs:documentation>The length of the bay. Observe that the Location of a StopPoint should indicate the position of the front door when a vehicle stands at the front of the bay.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Orientation" type="PT:DirectionDegrees" use="optional">
+					<xs:annotation>
+						<xs:documentation>The geographical orientation of a bus stopping at the StopPoint.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="IsForBoarding" type="PT:YesNo" use="optional" default="Y"/>
+				<xs:attribute name="IsForAlighting" type="PT:YesNo" use="optional" default="Y"/>
+				<xs:attribute name="IsInsideStation" type="PT:YesNo" use="optional" default="N">
+					<xs:annotation>
+						<xs:documentation>StopPoints inside stations can only be reached using transfer links. </xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="IsIndoors" type="PT:YesNo" use="optional" default="N">
+					<xs:annotation>
+						<xs:documentation>SL req.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="IsFictitious" type="PT:YesNo" use="optional" default="N">
+					<xs:annotation>
+						<xs:documentation>Fictitious StopPoints are used to indicate that a certain StopArea is intended, but that the actual StopPoint is not known. This could be the situation in certain rudimentary systems, but also when dynamic gate allocation is used.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="MainDirectionName" type="PT:Name" use="optional"/>
+				<xs:attribute name="PublicNote" type="PT:Note" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StopPointKey">
+		<xs:annotation>
+			<xs:documentation>Activation codes used by different types of devices such as interior signs and annoncement systems to display or announce a stop. Can also be used to present additional general information concerning a stop. A StopPoint can have one StopPointKey per DeviceName and Type at a specific point in time.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="StopPointRef" type="PT:StopPointRef"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="ParameterData" type="PT:ParameterData" use="required">
+					<xs:annotation>
+						<xs:documentation>Activation code relevant for the specified device or some other type of data or information relevant for this stop.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="DeviceName" type="PT:Name" use="required">
+					<xs:annotation>
+						<xs:documentation>The name of the system where the code is relevant.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Type" type="PT:StopPointKeyType" use="optional" default="STOPNAME"/>
+			</xs:extension>
+		</xs:complexContent>
+		<!--  *********************************************************  -->
+	</xs:complexType>
+	<xs:complexType name="TransferLink">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="ObstaclesOnLink" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ObstacleOnLink" type="PT:ObstacleOnLink" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="DistanceMeters" type="PT:Meters" use="optional">
+					<xs:annotation>
+						<xs:documentation>The average distance to be used for calculating the traversal time of the link.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="TransferMode" type="PT:TransferMode" use="required"/>
+				<xs:attribute name="DefaultDuration" type="PT:Duration" use="required">
+					<xs:annotation>
+						<xs:documentation>The default time in seconds to traverse the link.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Comment" type="PT:Comment" use="optional">
+					<xs:annotation>
+						<xs:documentation>A textual description that may be displayed in passenger information systems.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ConnectionLink">
+		<xs:annotation>
+			<xs:documentation>ConnectionLink is a type of TransferLink defining a possibility for a passenger arriving at a StopPoint to continue his or her Trip from another StopPoint.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:TransferLink">
+				<xs:sequence>
+					<xs:element name="StartStopPointRef" type="PT:StopPointRef">
+						<xs:annotation>
+							<xs:documentation>A reference to  the StopPoint at the start of the ConnectionLink.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="EndStopPointRef" type="PT:StopPointRef">
+						<xs:annotation>
+							<xs:documentation>A reference to  the StopPoint at the end of the ConnectionLink.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StationEntryLink">
+		<xs:complexContent>
+			<xs:extension base="PT:TransferLink">
+				<xs:sequence>
+					<xs:element name="StationEntrancePointRef" type="PT:StationEntrancePointRef">
+						<xs:annotation>
+							<xs:documentation>A reference to the StationEntrancePoint at the start of the StationEntryLink.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="EndStopPointRef" type="PT:StopPointRef">
+						<xs:annotation>
+							<xs:documentation>A reference to  the StopPoint at the end of the StationEntryLink.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StationExitLink">
+		<xs:complexContent>
+			<xs:extension base="PT:TransferLink">
+				<xs:sequence>
+					<xs:element name="StartStopPointRef" type="PT:StopPointRef">
+						<xs:annotation>
+							<xs:documentation>A reference to  the StopPoint at the start of the StationExitLink.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="StationEntrancePointRef" type="PT:StationEntrancePointRef">
+						<xs:annotation>
+							<xs:documentation>A reference to the StationEntrancePoint at the end of the StationExitLink.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ObstacleOnLink">
+		<xs:sequence>
+			<xs:element name="PrimaryBridgingDeviceRef" type="PT:BridgingDeviceRef"/>
+			<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="PassageDirection" type="PT:PassageDirection" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Action">
+		<xs:attribute name="ParameterData" type="PT:ParameterData" use="optional">
+			<xs:annotation>
+				<xs:documentation>Parameterdata for the action. 
+						It could contain any combination of relevant data for instance: "[NotificationNumber];[RadioChannel];[TelegramType]"</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Type" type="PT:ActionType" use="required">
+			<xs:annotation>
+				<xs:documentation>Defines the type of action.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DeviceName" type="PT:Name" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Zone">
+		<xs:annotation>
+			<xs:documentation>Defines a 2D place.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>A reference to the TransportAuthority that defines the Zone, and within whichs scope the number applies.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Centroid" type="PT:Location" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Number" type="PT:ZoneNumber" use="required">
+					<xs:annotation>
+						<xs:documentation>The number of the Zone.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="ZoneType" type="PT:ZoneType" use="required">
+					<xs:annotation>
+						<xs:documentation>The main characteristic of the Zone.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Name" type="PT:Name" use="optional">
+					<xs:annotation>
+						<xs:documentation>The name of the Zone.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Code" type="PT:Code" use="optional">
+					<xs:annotation>
+						<xs:documentation>A code within the TransportAuthority and Zone Type.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="ShortName" type="PT:ShortName" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StopAreaUtilisation">
+		<xs:annotation>
+			<xs:documentation>An alternative description of a StopArea. Using StopAreaUtilisations several TransportAuthoritys can co-operate and still use their own identification for a StopArea even if it is defined by another Transport Authority.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>A reference to the TransportAuthority that defines the StopAreaUtilisation.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StopAreaRef" type="PT:StopAreaRef">
+				<xs:annotation>
+					<xs:documentation>The referenced StopArea.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Number" type="PT:StopAreaNumber" use="required">
+			<xs:annotation>
+				<xs:documentation>The TransportAuthoritys number for the StopArea.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Name" type="PT:Name" use="optional">
+			<xs:annotation>
+				<xs:documentation>The full name of the StopArea.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ShortName" type="PT:ShortName" use="optional">
+			<xs:annotation>
+				<xs:documentation>The short name used where a limited number of characters for presentation is available.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional">
+			<xs:annotation>
+				<xs:documentation>A short code used in internal publications like driver timetables.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="RouteLink">
+		<xs:annotation>
+			<xs:documentation>Defines a spatial possibility to traverse from a JourneyPatternPoint to another JourneyPatternPoint.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="Start">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="StopPointRef" type="PT:StopPointRef">
+							<xs:annotation>
+								<xs:documentation>The importing application will convert StopPointRef to the JourneyPatternPointRef that is associated at the time of import.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="JourneyPatternPointRef" type="PT:JourneyPatternPointRef"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="End">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="StopPointRef" type="PT:StopPointRef">
+							<xs:annotation>
+								<xs:documentation>The importing application will convert StopPointRef to the JourneyPatternPointRef that is associated at the time of import.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="JourneyPatternPointRef" type="PT:JourneyPatternPointRef"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TraversableByTransportModes">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="TransportMode" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="TransportMode" type="PT:TransportMode" use="required">
+									<xs:annotation>
+										<xs:documentation>A code for the transport mode that may traverse the Link defined in the preceding Link-record.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PointsOnRouteLink" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PointOnRouteLink" type="PT:PointOnLink" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Defines a location on the link where an action will take place.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="PT:Name" use="optional">
+			<xs:annotation>
+				<xs:documentation>The name of the Link.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DistanceMeters" type="PT:Meters" use="required">
+			<xs:annotation>
+				<xs:documentation>The length of the Link in meters.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="SpeedLimitKmPerHour" type="PT:KmPerHour" use="optional">
+			<xs:annotation>
+				<xs:documentation>Speedlimit for the Link in km/h.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StopArea">
+		<xs:annotation>
+			<xs:documentation>Defines the stop as a whole.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+			<xs:element name="StopPoints">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="StopPoint" type="PT:StopPoint" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Defines a JourneyPatternPoint representing an individual StopPoint in the StopArea.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>A reference to the TransportAuthority that defines the StopArea.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Centroid" type="PT:Location" minOccurs="0"/>
+			<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Number" type="PT:StopAreaNumber" use="required">
+			<xs:annotation>
+				<xs:documentation>The TransportAuthoritys number for the StopArea.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Name" type="PT:Name" use="required">
+			<xs:annotation>
+				<xs:documentation>The full name of the StopArea.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ShortName" type="PT:ShortName" use="optional">
+			<xs:annotation>
+				<xs:documentation>The short name used where a limited number of characters for presentation is available.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional">
+			<xs:annotation>
+				<xs:documentation>A short code used in internal publications like driver timetables.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Type" type="PT:StopAreaType" use="required">
+			<xs:annotation>
+				<xs:documentation>The main characteristic of the StopArea.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DefaultInterchangeDuration" type="PT:Duration" use="optional">
+			<xs:annotation>
+				<xs:documentation>The assumed traversal time between different StopPoints within this StopArea. Used when no specific ConnectionLink is available for the pair of StopPoints.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="InterchangePriority" type="PT:InterchangePriority" use="optional" default="8">
+			<xs:annotation>
+				<xs:documentation>The interchange priority is used to influence Journey Planners of which stop that should be chosen for changes between  two lines that run in parallel. The value 1 represents the highest priority. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PointOnLink">
+		<xs:annotation>
+			<xs:documentation> A point on a RouteLink where  an action or check should take place. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="Location" type="PT:Location" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Coordinates for the Point.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Action" type="PT:Action" minOccurs="0"/>
+					<xs:element name="Offset">
+						<xs:annotation>
+							<xs:documentation>A detailed description of how to combine the optional attributes is included in the DOI documention</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="DistanceFromStartMeters" type="PT:Meters" use="optional">
+								<xs:annotation>
+									<xs:documentation>The distance offset in meters relative to the beginning of the RouteLink.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="DurationAfterDepartureFromStartOfLink" type="PT:Duration" use="optional">
+								<xs:annotation>
+									<xs:documentation>The time offset from the later of EarlestDeparture andLatestArrival time at the start of the RouteLink.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="DurationBeforeArrivalToEndOfLink" type="PT:Duration" use="optional">
+								<xs:annotation>
+									<xs:documentation>The time offset to the LatestArrival time at the end of the RouteLink.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Type" type="PT:PointOnLinkType" use="required">
+					<xs:annotation>
+						<xs:documentation>Type of Point.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="JourneyPatternPoint">
+		<xs:annotation>
+			<xs:documentation>A general supertype for StopPoints, ViaPoints and ParkingPoints.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>A reference to the TransportAuthority that defines the journey pattern point.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Location" type="PT:Location" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Defines the geographical location of the point</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZoneRefs" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>All Zones that the point is included in</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ZoneRef" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>A reference to the TransportAuthority that defines the Zone.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+										</xs:sequence>
+										<xs:attribute name="ZoneType" type="PT:ZoneType" use="required">
+											<xs:annotation>
+												<xs:documentation>The main characteristics of the Zone. Eg. TARIFF</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="ZoneNumber" type="PT:ZoneNumber" use="required">
+											<xs:annotation>
+												<xs:documentation>The TransportAuthoritys number for the Zone.</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="JourneyPatternPointNumber" type="PT:JourneyPatternPointNumber" use="required">
+					<xs:annotation>
+						<xs:documentation>The TransportAuthoritys global number for the point within the number space shared between StopPoints, ParkingPoints and other JourneyPatternPoints.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="RoadElementName" type="PT:Name" use="optional">
+					<xs:annotation>
+						<xs:documentation>Street name that this ViaPoint/StopPoint is situated along.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StationEntrancePoint">
+		<xs:annotation>
+			<xs:documentation>Doors or passageways used to enter or leave a station</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="Location" type="PT:Location" minOccurs="0"/>
+					<xs:element name="OpeningHours" type="PT:OpeningHours" minOccurs="0"/>
+					<xs:element name="StopAreaRef" type="PT:StopAreaRef"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+				<xs:attribute name="LocalNumber" type="PT:StationEntrancePointNumber" use="required"/>
+				<xs:attribute name="Name" type="PT:Name" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StationEntrancePointRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="Number">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="StopAreaRef" type="PT:StopAreaRef"/>
+							</xs:sequence>
+							<xs:attribute name="LocalNumber" type="PT:StationEntrancePointNumber" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Gid">
+						<xs:complexType>
+							<xs:attribute name="Gid" type="PT:StationEntrancePointGid" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="EquipmentProfileRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:sequence>
+					<xs:element name="Code">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+							</xs:sequence>
+							<xs:attribute name="Code" type="PT:Code" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="EquipmentProfile">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="Bench" type="PT:Equipment" minOccurs="0"/>
+					<xs:element name="RainShelter" type="PT:Equipment" minOccurs="0"/>
+					<xs:element name="Curb" type="PT:Equipment" minOccurs="0"/>
+					<xs:element name="SignBoard" type="PT:Equipment" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+				<xs:attribute name="Name" type="PT:Name" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Equipment">
+		<xs:attribute name="Description" type="PT:Note" use="optional"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="HyperLink">
+		<xs:annotation>
+			<xs:documentation>Related weblink for some purpose. The actual link is stored in the attribute 'Name'</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:attribute name="PublicNote" type="PT:Note" use="optional"/>
+				<xs:attribute name="Name" type="PT:HyperLinkName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OpeningHours">
+		<xs:annotation>
+			<xs:documentation>Sometimes there is a restriction on the opening hours. This could vary according to which daytype that applies.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DayType" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="OpenPeriods">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="OpenPeriod" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="OpeningTime" type="PT:Time"/>
+												<xs:element name="ClosingTime" type="PT:Time"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="PublicDayType" type="PT:PublicDayTypeCode" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ServiceCalendarRef">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Used to indicate that another TransportAuthority than the IssuingTransportAuthorityRef applies for the resolution of which Calendar that applies</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="ServiceCalendar" type="PT:Code" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ActionType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="RELEASEPRIO">
+				<xs:annotation>
+					<xs:documentation>The vehicle has entered the intersection and do not need priority any more</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="REQUESTPRIO">
+				<xs:annotation>
+					<xs:documentation>Request for priority in an intersection.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SEND_DEPARTURE">
+				<xs:annotation>
+					<xs:documentation>Send a departure report when conditions match parameterdata.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SEND_ARRIVAL">
+				<xs:annotation>
+					<xs:documentation>Send an arrival report when conditions match parameterdata.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SEND_DUE">
+				<xs:annotation>
+					<xs:documentation>Send a due report when conditions match parameterdata.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SEND_EXTRA">
+				<xs:annotation>
+					<xs:documentation>Send an extra progress report when conditions match parameterdata.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OTHER">
+				<xs:annotation>
+					<xs:documentation>Request other action in some device.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BridgingDeviceNumber">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BridgingDeviceType">
+		<xs:annotation>
+			<xs:documentation>Bridging devices: Elevators, stairs, escalators and conveyor-belts.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="DOOR"/>
+			<xs:enumeration value="ELEVATOR"/>
+			<xs:enumeration value="STAIRWAY"/>
+			<xs:enumeration value="ESCALAT"/>
+			<xs:enumeration value="CONVEYOR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DirectionDegrees">
+		<xs:annotation>
+			<xs:documentation>Heading 0 - 360 degrees</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="359"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FacilityType">
+		<xs:annotation>
+			<xs:documentation>Type of faciltity</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="CARPARK"/>
+			<xs:enumeration value="OTHER"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InterchangePriority">
+		<xs:annotation>
+			<xs:documentation>InterchangePriority is a value in the range 1 - 16 used to influence Journey Planners of which stop that should be chosen for changes between two lines that run in parallel. The value 1 represents the highest priority. </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PassageDirection">
+		<xs:annotation>
+			<xs:documentation>The direction in which a BridgingDevice can be passed/must be passed</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="UP"/>
+			<xs:enumeration value="DOWN"/>
+			<xs:enumeration value="ANY"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PlaceType">
+		<xs:annotation>
+			<xs:documentation>SITE, ADDRESS, STOPAREA etcetera</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="PUBLIC_SITE"/>
+			<xs:enumeration value="STOPAREA"/>
+			<xs:enumeration value="NEIGHBOURHOOD"/>
+			<xs:enumeration value="ADDRESS"/>
+			<xs:enumeration value="STREET"/>
+			<xs:enumeration value="OTHER"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PointOnLinkType">
+		<xs:annotation>
+			<xs:documentation>Descibes the purpose of the point on link. Signal preemption,  displaying extra information, GPS-corridors and additional report points for prognosis purpuses are some possible uses.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ACTIVATION">
+				<xs:annotation>
+					<xs:documentation>Activation points are used to request and release traffic light priority.They could also be used to trigger other types of devices </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MAPPING">
+				<xs:annotation>
+					<xs:documentation>Mapping points are used to enhance the description of the intended path on a route link.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TIMING">
+				<xs:annotation>
+					<xs:documentation>Timing points are used to force the sending of extra passage reports under certain conditions</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="KmPerHour">
+		<xs:annotation>
+			<xs:documentation>Speed in km/h</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="200"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StationEntrancePointNumber">
+		<xs:annotation>
+			<xs:documentation>The local number within the StopArea</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopAreaType">
+		<xs:annotation>
+			<xs:documentation>The primary function of the StopArea in the public transportation system.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="AIRPORT"/>
+			<xs:enumeration value="BUSTERMINAL"/>
+			<xs:enumeration value="FERRYBERTH"/>
+			<xs:enumeration value="METROSTATION"/>
+			<xs:enumeration value="RAILWAYSTATION"/>
+			<xs:enumeration value="TRAMSTATION"/>
+			<xs:enumeration value="SHIPBERTH"/>
+			<xs:enumeration value="TAXITERMINAL"/>
+			<xs:enumeration value="UNKNOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopPointDesignation">
+		<xs:annotation>
+			<xs:documentation>The local identification to the public. Typically a letter or a 1 or 2 digit number</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopPointType">
+		<xs:annotation>
+			<xs:documentation>I.e. A plattform or a refuge.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="BUSSTOP"/>
+			<xs:enumeration value="REFUGE"/>
+			<xs:enumeration value="PLATFORM"/>
+			<xs:enumeration value="TRACK"/>
+			<xs:enumeration value="GATE"/>
+			<xs:enumeration value="PIER"/>
+			<xs:enumeration value="ENTRANCE"/>
+			<xs:enumeration value="EXIT"/>
+			<xs:enumeration value="UNKNOWN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StopPointKeyType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="STOPNAME">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to the name of the stop. I.e "Ekeby"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="STOPMESSAGE">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to  a complete message concerning this stop. I.e  "Next stop Ekeby" or "Next stop Ekeby, mind your step when disembarking"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ADDITIONAL_INFO">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to additional information concerning this stop. I.e  "Mind your step when disembarking"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CHANGE_INFO">
+				<xs:annotation>
+					<xs:documentation>Code used when key corresponds to additional information concerning interchange at this stop. I.e  "Change to subway"</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TransferMode">
+		<xs:annotation>
+			<xs:documentation>Type of mode to traverse a link. Usually "WALK"</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="WALK"/>
+			<xs:enumeration value="TAXI"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ZoneNumber">
+		<xs:annotation>
+			<xs:documentation>.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="9999999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ZoneType">
+		<xs:annotation>
+			<xs:documentation>TARIFF, COUNTY etcetera.  Additional ZoneTypes will be added in later schemas</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="TARIFF"/>
+			<xs:enumeration value="TRAFFIC"/>
+			<xs:enumeration value="PARISH"/>
+			<xs:enumeration value="MUNICIPALITY"/>
+			<xs:enumeration value="COUNTY"/>
+			<xs:enumeration value="TALKGROUP"/>
+			<xs:enumeration value="INFO_REGION"/>
+			<xs:enumeration value="PARKINGAREA"/>
+			<xs:enumeration value="FAREREFERENCEPOINT"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

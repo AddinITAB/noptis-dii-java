@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.6.7">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2012.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+			 
+		Version 3.06 - First release version
+		Version 3.6.1
+			- Only version number changed.
+		Version 3.6.2
+			- BlockNumber range restricted.
+		Version 3.6.3
+			- Blocks element is optional.
+			- Namespace adjusted.
+		Version 3.6.4
+			- Annotation documentation on OperatingDayDates removed.
+		Version 3.6.5
+			- OperatingDay sequence is maxOccurs="unbounded".
+		Version 3.6.6
+			- Attributes uses specific type of Gid instead of general Gid type.
+		Version 3.6.7
+			-Added the use of Keys
+        </xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="VehicleScheduleVersion">
+		<xs:annotation>
+			<xs:documentation>Information about how the VehicleJourneys are chained into Blocks worked by logical Vehicles.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:CompetitiveVersion">
+				<xs:sequence>
+					<xs:element name="IssuingContractorRef" type="PT:ContractorRef"/>
+					<xs:element name="Blocks" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence maxOccurs="unbounded">
+								<xs:element name="Block" type="PT:PlannedBlock">
+									<xs:annotation>
+										<xs:documentation>A Block includes a number of chained tasks that should be completed by one logical vehicle.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PlannedBlock">
+		<xs:complexContent>
+			<xs:extension base="PT:Block">
+				<xs:choice>
+					<xs:sequence>
+						<xs:element name="DayTypes" type="PT:DayTypes"/>
+						<xs:element name="OperatingDayExceptions" type="PT:OperatingDayExceptions" minOccurs="0"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="OperatingDays">
+							<xs:complexType>
+								<xs:sequence maxOccurs="unbounded">
+									<xs:element name="OperatingDay">
+										<xs:complexType>
+											<xs:attribute name="Date" type="PT:Date" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Block">
+		<xs:annotation>
+			<xs:documentation>A general supertype for Block</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:choice>
+						<xs:element name="Number">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="DefiningContractorRef" type="PT:ContractorRef" minOccurs="0"/>
+								</xs:sequence>
+								<xs:attribute name="Number" type="PT:BlockNumber" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Gid">
+							<xs:complexType>
+								<xs:attribute name="Gid" type="PT:BlockGid" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+					<xs:element name="Start">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ParkingPointRef" type="PT:ParkingPointRef" minOccurs="0"/>
+								<xs:element name="Time" type="PT:Time"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="End">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ParkingPointRef" type="PT:ParkingPointRef" minOccurs="0"/>
+								<xs:element name="Time" type="PT:Time"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Tasks" type="PT:Tasks" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="BlockNumber">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="99999"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

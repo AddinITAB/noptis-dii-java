@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.6.8">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2012.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+				 
+		Version 3.05  - First release version
+		Version 3.6.1 
+			- Attribute Name of element GloballyUniqueId in PhysicalVehicleRef is required. 
+			- Annotation added to ChassisName. 
+			- Attribute Name added to element Garage.
+			- Attribute names corrected in element Accessibility.
+		Version 3.6.2
+			- Annotation added for ParkingPlaceRef.
+			- minLength = 1 for RegistrationNumber. 
+		Version 3.6.3
+			- VehicleUtilisation internal structure adjusted to clarify permitted combinations of elements.
+		Version 3.6.4	
+			- Redundant restriction on VehicleNumber removed.
+		Version 3.6.5
+			- Changed order of root elements.
+		Version 3.6.6
+			- Namespace adjusted.
+		Version 3.6.7
+			- Annotation added to attribute Name in element Garage.
+		Version 3.6.8
+			-Added the use of Keys
+		</xs:documentation>
+	</xs:annotation>
+	<xs:complexType name="ProductionResourcesVersion">
+		<xs:annotation>
+			<xs:documentation>Contains information about vehicles and parking places.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ConsecutiveVersion">
+				<xs:sequence>
+					<xs:element name="Garages" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Garage" type="PT:Garage" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Vehicles" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Vehicle" type="PT:Vehicle" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="VehicleUtilisations" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="VehicleUtilisation" type="PT:VehicleUtilisation" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>There can at any time only be one valid VehicleUtilisation with OwningOrganisationRef per Vehicle.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<!--  *********************************************************  -->
+	<xs:complexType name="VehicleUtilisation">
+		<xs:annotation>
+			<xs:documentation>A Vehicle can hace many references simultanouesly, but it can only have one OwningOrganisation, Contract, DefaultParkingPlaceRef a time.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="PhysicalVehicleRef" type="PT:PhysicalVehicleRef"/>
+					<xs:element name="DefiningContractorRef" type="PT:ContractorRef">
+						<xs:annotation>
+							<xs:documentation>This is the Contractor in which scope the Number attribute of Utilisation should be understood. </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:sequence minOccurs="0">
+						<xs:element name="OwningOrganisationRef" type="PT:OrganisationRef">
+							<xs:annotation>
+								<xs:documentation>A Vehicle can only have one owner at any one time. This will be checked during import.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ManagingOrganisationalUnitRef" type="PT:OrganisationalUnitRef" minOccurs="0"/>
+						<xs:element name="ContractRef" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is the primary Contract that this vehicle is intended to be used for. </xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ContractingTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+								</xs:sequence>
+								<xs:attribute name="ReferenceName" type="PT:Name" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="DefaultParkingPlaceRef" type="PT:ParkingPlaceRef" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>This is where the vehicle is normally parked. VehicleUtilisation.DefiningContractorRef is used as default for DefiningContractorRef under GarageNumber and VehicleUtilisation.OwningOrganisationRef is used as default for OwningOrganisationRef under GarageName.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Number" type="PT:VehicleNumber" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Garage">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="OwningOrganisationRef" type="PT:OrganisationRef" minOccurs="0"/>
+					<xs:element name="Utilisations">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Utilisation" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+											<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+											<xs:element name="ManagingOrganisationalUnitRef" type="PT:OrganisationalUnitRef" minOccurs="0"/>
+											<xs:element name="DefiningContractorRef" type="PT:ContractorRef">
+												<xs:annotation>
+													<xs:documentation>This is the Contractor in which scope the Number attribute of Utilisation should be understood. </xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="Number" type="PT:GarageNumber" use="required"/>
+										<xs:attribute name="Name" type="PT:Name" use="optional"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ParkingPointRefs" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ParkingPointRef" type="PT:ParkingPointRef" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Centroid" type="PT:Location" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required">
+					<xs:annotation>
+						<xs:documentation>This serves as a default Name for Utilisations of this Garage where no explict Utilisation Name is given.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PhysicalVehicleRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:choice>
+					<xs:element name="GloballyUniqueId">
+						<xs:complexType>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ChassisNumber">
+						<xs:complexType>
+							<xs:attribute name="ChassisName" type="PT:Name" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Vehicle">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="Identification">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="GloballyUniqueId">
+									<xs:complexType>
+										<xs:attribute name="Name" type="PT:Name" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ChassisNumber">
+									<xs:complexType>
+										<xs:attribute name="ChassisName" type="PT:Name" use="required">
+											<xs:annotation>
+												<xs:documentation>Chassis Name is not in scope of Chassis Make Name, it is globally unique in itself.</xs:documentation>
+											</xs:annotation>
+										</xs:attribute>
+										<xs:attribute name="ChassisMakeName" type="PT:Name" use="optional"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+							<xs:attribute name="Name" type="PT:Name" use="optional"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="CommunicationAddresses" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="StaticCommunicationAddress" type="PT:CommunicationAddress" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>An address that does not change over time.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Model" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="MakeName" type="PT:Name" use="optional"/>
+							<xs:attribute name="ModelYear" type="PT:Year" use="optional"/>
+							<xs:attribute name="ModelTypeName" type="PT:Name" use="optional"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="TransportMode">
+						<xs:complexType>
+							<xs:choice>
+								<xs:element name="Bus">
+									<xs:complexType>
+										<xs:attribute name="BusSizeType" type="PT:BusSizeType" use="required"/>
+										<xs:attribute name="RegistrationNumber" type="PT:RegistrationNumber" use="optional"/>
+										<xs:attribute name="RegistrationDate" type="PT:Date" use="optional"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Tram"/>
+								<xs:element name="Metro"/>
+								<xs:element name="Train"/>
+								<xs:element name="Ferry"/>
+								<xs:element name="Ship"/>
+								<xs:element name="Taxi"/>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Engine" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="FuelTypes">
+									<xs:annotation>
+										<xs:documentation>There can be engines capable of using different types of fuel. Sometimes a mixture of different fuels is used. There can also be hybrid solutions.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="FuelType" maxOccurs="unbounded">
+												<xs:complexType>
+													<xs:attribute name="FuelType" type="PT:FuelType" use="required"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Capacity" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="StandingsCount" type="PT:Count" use="optional"/>
+							<xs:attribute name="SeatingsCount" type="PT:Count" use="optional"/>
+							<xs:attribute name="PramsCount" type="PT:Count" use="optional"/>
+							<xs:attribute name="WheelchairsCount" type="PT:Count" use="optional"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Accessibility" minOccurs="0">
+						<xs:complexType>
+							<xs:attribute name="HasLowEntrance" type="PT:YesNo" use="optional" default="N"/>
+							<xs:attribute name="HasLift" type="PT:YesNo" use="optional" default="N"/>
+							<xs:attribute name="HasRamp" type="PT:YesNo" use="optional" default="N"/>
+							<xs:attribute name="HasLowFloor" type="PT:YesNo" use="optional" default="N"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Size">
+						<xs:annotation>
+							<xs:documentation>Size of vehicle unit as a whole counting both motorcar and trailer(s).</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:attribute name="LengthMeters" type="PT:Meters" use="optional"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="RegistrationNumber">
+		<xs:annotation>
+			<xs:documentation>RegistrationNumber of a Vehicle.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Year">
+		<xs:annotation>
+			<xs:documentation>Year</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:gYear"/>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleNumber">
+		<xs:annotation>
+			<xs:documentation>Unique number of vehicle within the contractors organisation.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxInclusive value="99999"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

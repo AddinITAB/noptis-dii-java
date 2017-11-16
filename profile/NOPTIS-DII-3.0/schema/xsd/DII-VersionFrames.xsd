@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.5.2">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2014.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+				 
+			Version 3.05 - Release version.
+			Version 3.5.1
+				- Only version number changed.
+			Version 3.5.2
+				 - Namespace adjusted.
+		</xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="VersionFramesVersion">
+		<xs:annotation>
+			<xs:documentation>Contains information about valid VersionFrames and their context and scope. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:SingleStateVersion">
+				<xs:sequence>
+					<xs:element name="VersionFrames" minOccurs="0">
+						<xs:complexType>
+							<xs:choice maxOccurs="unbounded">
+								<xs:element name="CompetitiveVersionFrame" type="PT:CompetitiveVersionFrame"/>
+								<xs:element name="ConsecutiveVersionFrame" type="PT:ConsecutiveVersionFrame"/>
+								<xs:element name="SingleStateVersionFrame" type="PT:SingleStateVersionFrame"/>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="VersionFrame">
+		<xs:annotation>
+			<xs:documentation>.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:PTObject">
+				<xs:sequence>
+					<xs:element name="DefiningOrganisationalUnitRef" type="PT:OrganisationalUnitRef"/>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+				<xs:attribute name="ValidityDelayDayCount" type="PT:Count" use="optional">
+					<xs:annotation>
+						<xs:documentation>Changes to objects or addition of new objects or removal of old objects defined in an imported document are normally applied earliest from the following midnight. In some situations it is advisable to postpone the date of application even further so that all client applications get sufficient time to transmit the changes before they take effect. This attribute can be used to postpone this date a certain number of days.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="SingleStateVersionFrame">
+		<xs:annotation>
+			<xs:documentation>.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:VersionFrame">
+				<xs:attribute name="Context" type="PT:SingleStateVersionFrameContext" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ConsecutiveVersionFrame">
+		<xs:annotation>
+			<xs:documentation>.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:VersionFrame">
+				<xs:attribute name="Context" type="PT:ConsecutiveVersionFrameContext" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="CompetitiveVersionFrame">
+		<xs:annotation>
+			<xs:documentation>.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:VersionFrame">
+				<xs:sequence>
+					<xs:element name="NamedPeriodFrameRef" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="DefiningTransportAuthorityRef" type="PT:TransportAuthorityRef"/>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="Context" type="PT:CompetitiveVersionFrameContext" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="SingleStateVersionFrameContext">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="VERSIONFRAME"/>
+			<xs:enumeration value="CALENDAR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="ConsecutiveVersionFrameContext">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ORGANISATION"/>
+			<xs:enumeration value="SERVICE"/>
+			<xs:enumeration value="NETWORK"/>
+			<xs:enumeration value="PRODUCTIONRESOURCE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="CompetitiveVersionFrameContext">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="TIMETABLE"/>
+			<xs:enumeration value="VEHICLESCHEDULE"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

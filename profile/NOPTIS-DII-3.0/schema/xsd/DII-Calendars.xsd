@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.7.6">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2014.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+				 
+			Version 3.06 - First release version
+			Version 3.7.1 
+				- ServiceCalender and SpecialCalendar: DeviatingDay is optional , not DeviatingDays. 
+				- Annotation added concerning alternate names in public and service day types 
+			Version 3.7.2
+				- 0 Named Day elements are allowed in a NemedDays element
+			Version 3.7.3	
+				- AlternateNames is not unbounded while contained Name is unbounded
+				- Namespace adjusted
+			Version 3.7.4
+				- Groups Public Calendar and Special Calendars introduced for clarity.
+				- All elements in PublicCalendar moved to root-level and made optional.
+				- New root-level elements DeviatingDaysInServiceCalendars and DeviatingDaysInSpecialCalendars added.
+				- DeviatingDays element in element ServiceCalendar moved to DeviatingDaysInServiceCalendars root-node
+				- DeviatingDays element in element SpecialCalendar moved to DeviatingDaysInSpecialCalendars root-node
+				- Attribute ReleasedForInternalUseUptoDate moved to element PublicCalendar
+				- Attribute Name and Code in element SpecialCalendar replaced by attribute ReferenceName
+			Version 3.7.5
+				- Remove possibility to define DefiningTransportAuthority for ServiceCalendar in DeviatingDaysInServiceCalendar.
+			Version 3.7.6 
+				- AlternateNames element replaced by Keys
+				- NamedPeriodFrame removed
+				- Annotation regarding requirements on first import of PublicCalendar adjusted
+				- It is permitted to provide PublicCalendar and SpecialCalendars in the same document
+				- Corrected PublicDayTypes: Requiring Name and allowing Abbreviation
+				- Added Keys to SpecialCalendar and ServiceCalendar
+				- Added Keys to SpecialDayType and DeviatingDays (special och service)
+
+				
+		</xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="CalendarsVersion">
+		<xs:annotation>
+			<xs:documentation>Contains information about Calendars. Calendar uses single state version model. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:SingleStateVersion">
+				<xs:sequence>
+					<xs:sequence>
+						<xs:group ref="PT:PublicCalendar"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:group ref="PT:SpecialCalendars"/>
+					</xs:sequence>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="SpecialCalendars">
+		<xs:sequence>
+			<xs:element name="SpecialCalendar" type="PT:SpecialCalendar" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeviatingDaysInServiceCalendars">
+		<xs:sequence>
+			<xs:element name="DeviatingDaysInServiceCalendar" type="PT:DeviatingDaysInServiceCalendar" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeviatingDaysInSpecialCalendars">
+		<xs:sequence>
+			<xs:element name="DeviatingDaysInSpecialCalendar" type="PT:DeviatingDaysInSpecialCalendar" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeviatingDaysInServiceCalendar">
+		<xs:sequence>
+			<xs:element name="ServiceCalendarRef" type="PT:RestrictedServiceCalendarRef"/>
+			<xs:element name="DeviatingDays" type="PT:ServiceCalendarDeviatingDays">
+				<xs:annotation>
+					<xs:documentation>Dates when the operation is different from the strict monday to sunday interpretation are described  as deviating days.  For instance Christmas Day could fall on any day of the week, but might be operated as a sunday.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="DeviatingDaysInSpecialCalendar">
+		<xs:sequence>
+			<xs:element name="SpecialCalendarRef" type="PT:SpecialCalendarRef"/>
+			<xs:element name="DeviatingDays" type="PT:SpecialCalendarDeviatingDays">
+				<xs:annotation>
+					<xs:documentation>Dates when the operation differs from the interpretation in the Service Calendar. There could be special daytype codes used to mark "schools closed in Gothenburg", "marketday in Uddevalla".</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:group name="SpecialCalendars">
+		<xs:sequence>
+			<xs:element name="SpecialCalendars" type="PT:SpecialCalendars" minOccurs="0"/>
+			<xs:element name="DeviatingDaysInSpecialCalendars" type="PT:DeviatingDaysInSpecialCalendars" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<!--  *********************************************************  -->
+	<xs:complexType name="NamedDays">
+		<xs:sequence>
+			<xs:element name="NamedDay" type="PT:NamedDay" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="DefinedFromDate" type="xs:date" use="required">
+			<xs:annotation>
+				<xs:documentation>Days not defined as beeing NamedDay in the DefinedPeriod will be assumed to have the Name of the DayType</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DefinedUptoDate" type="xs:date" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PublicDayTypes">
+		<xs:sequence>
+			<xs:element name="StandardDayTypes" type="PT:StandardPublicDayTypes">
+				<xs:annotation>
+					<xs:documentation>Monday ... Sunday.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ServiceDayTypes" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Additional Public daytypes that could be used in communication towards the public. The daytypes must be understandable in the context of a calendar for all of the public. Descriptions such as "holy day" or "day before sunday" are acceptable, where as descriptions such as "schooldays in Gothenburg" are not acceptable since it is not general knowledge when the schools are open or not.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ServiceDayType" type="PT:ServiceDayType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:group name="PublicCalendar">
+		<xs:annotation>
+			<xs:documentation>A new Public Calendar must include the PublicCalendar and PublicDayTypes elements.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PublicCalendar" type="PT:PublicCalendar" minOccurs="0"/>
+			<xs:element name="NamedDays" type="PT:NamedDays" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Days that has special names known to all of the public such as Christmas Day. NamedDays are used for presentation purposes. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PublicDayTypes" type="PT:PublicDayTypes" minOccurs="0"/>
+			<xs:element name="ServiceCalendars" type="PT:ServiceCalendars" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Calendars that are communicated separately towards the public. For example there could be a "day traffic"-calendar and a "night traffic"- calendar.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DeviatingDaysInServiceCalendars" type="PT:DeviatingDaysInServiceCalendars" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PublicCalendar">
+		<xs:attribute name="ReleasedForPublicUseUptoDate" type="PT:Date" use="required"/>
+		<xs:attribute name="ReleasedForInternalUseUptoDate" type="PT:Date" use="required"/>
+		<xs:attribute name="DefaultLanguageCode" type="PT:LanguageCode" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ServiceCalendars">
+		<xs:sequence>
+			<xs:element name="ServiceCalendar" type="PT:ServiceCalendar" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceCalendar">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="SpecialCalendar">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="ServiceCalendarRef" type="PT:ServiceCalendarRef"/>
+					<xs:element name="DefiningOrganisationalUnitRef" type="PT:OrganisationalUnitRef" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Defaults to IssuingTransportAuthorityRef if omitted.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SpecialDayTypes" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation> Daytypes that could be used internally to simplify timetable construction. The daytypes could represent such descriptions as "schooldays in Gothenburg", "marketdays in Uddevalla" or similar. These concepts will not be exposed to the public, but will be resolved into their public daytypes according to the selected Service Calendar.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SpecialDayType" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+										</xs:sequence>
+										<xs:attribute name="Code" type="PT:SpecialDayTypeCode" use="required"/>
+										<xs:attribute name="Description" type="PT:Comment" use="optional"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="ReferenceName" type="PT:Name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceCalendarDeviatingDays">
+		<xs:sequence>
+			<xs:element name="DeviatingDay" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Restriction: Only one deviating day can be defined for one specific date in a service calendar!</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+					</xs:sequence>
+					<xs:attribute name="PublicDayTypeCode" type="PT:PublicDayTypeCode" use="required"/>
+					<xs:attribute name="Date" type="PT:Date" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="DefinedFromDate" type="xs:date" use="required">
+			<xs:annotation>
+				<xs:documentation>Dates not marked as beeing DeviatingDay in the DefinedPeriod are considered using the daytypes from the ServiceCalendar</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DefinedUptoDate" type="xs:date" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="SpecialCalendarDeviatingDays">
+		<xs:sequence>
+			<xs:element name="DeviatingDay" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Restriction: Only one deviating day can be defined for one specific date in a special calendar.
+Observe that it is allowed to set a date as any public daytype or special daytype. The import process will interpret the timetable according to the special calendar, but will make necessary translations and expose the resulting data from the perspective of the public daytypes defined in the service calendar.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Keys" type="PT:Keys" minOccurs="0"/>
+					</xs:sequence>
+					<xs:attribute name="DayTypeCode" type="PT:DayTypeCode" use="required"/>
+					<xs:attribute name="Date" type="PT:Date" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="DefinedFromDate" type="xs:date" use="required">
+			<xs:annotation>
+				<xs:documentation>Dates not marked as beeing DeviatingDay in the DefinedPeriod are considered using the daytypes from the corrsponding ServiceCalendar</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DefinedUptoDate" type="xs:date" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="RestrictedServiceCalendarRef">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObjectRef">
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="PublicDayType">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObject">
+				<xs:sequence>
+					<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have Keys describing alternate names.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+				<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+				<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceDayType">
+		<xs:complexContent>
+			<xs:extension base="PT:PTObject">
+				<xs:sequence>
+					<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+				<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+				<xs:attribute name="Code" type="PT:ServiceDayTypeCode" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="NamedDay">
+		<xs:sequence>
+			<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The Keys element can be used to provide alternate names in other languages.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Date" type="PT:Date" use="required"/>
+		<xs:attribute name="Name" type="PT:Name" use="required"/>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="StandardPublicDayTypes">
+		<xs:sequence>
+			<xs:element name="MondayDayType">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:restriction base="PT:PublicDayType">
+							<xs:sequence>
+								<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+							<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+							<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required" fixed="1"/>
+						</xs:restriction>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TuesdayDayType">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:restriction base="PT:PublicDayType">
+							<xs:sequence>
+								<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+							<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+							<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required" fixed="2"/>
+						</xs:restriction>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="WednesdayDayType">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:restriction base="PT:PublicDayType">
+							<xs:sequence>
+								<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+							<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+							<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required" fixed="3"/>
+						</xs:restriction>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ThursdayDayType">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:restriction base="PT:PublicDayType">
+							<xs:sequence>
+								<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+							<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+							<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required" fixed="4"/>
+						</xs:restriction>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="FridayDayType">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:restriction base="PT:PublicDayType">
+							<xs:sequence>
+								<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+							<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+							<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required" fixed="5"/>
+						</xs:restriction>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SaturdayDayType">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:restriction base="PT:PublicDayType">
+							<xs:sequence>
+								<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+							<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+							<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required" fixed="6"/>
+						</xs:restriction>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SundayDayType">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:restriction base="PT:PublicDayType">
+							<xs:sequence>
+								<xs:element name="Keys" type="PT:Keys" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>The Keys element can be used to provide alternate names in other languages. Either none or all public and service day types should have a Key describing an alternate name for a certain language.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="Name" type="PT:Name" use="required"/>
+							<xs:attribute name="Abbreviation" type="PT:Abbreviation" use="optional"/>
+							<xs:attribute name="Code" type="PT:PublicDayTypeCode" use="required" fixed="7"/>
+						</xs:restriction>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+</xs:schema>

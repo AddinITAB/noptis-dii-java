@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PT="http://www.pubtrans.com/DII/3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.pubtrans.com/DII/3.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="3.7.6">
+	<xs:include schemaLocation="PT-SharedTypes.xsd"/>
+	<!--  *********************************************************  -->
+	<xs:annotation>
+		<xs:documentation>
+		This document is a property of NOPTIS. The definition of the interface specification defined in this document is a property of NOPTIS.
+		
+		Copyright © NOPTIS 2007-2014.
+		Final and approved versions of the document may be reproduced or used for the purpose of integrating systems according to the NOPTIS standard.
+		By using this document and the solutions designed herein, the user confirms that the material is not being used in a derogatory manner or in a misleading context.
+		The source of the material must be acknowledged and the title of the content must be included when being reproduced as part of another publication or service.
+				 
+		In order to avoid uncertainties for possible users of the standardised interface NOPTIS it is noted that Hogia Public Transport Systems AB,
+		as the owner of the registered trademark PUBTRANS, gives any user of the NOPTIS interface the right to use the names ToPubTrans, FromPubTrans,
+		ToPubTransMessages, FromPubTransMessages and www.pubtrans.com when – and to the extent - this is required to enable the user to technically interact through the NOPTIS interface.
+		The right of use is limited to the aforesaid and is applicable regardless of whether or not the interaction involves a Hogia product or not.
+			 
+			Version 3.06 - First release version.
+			Version 3.7.1 
+				- Name attribute removed from ServiceFunction.
+				- Required GloballyUniqueId.Name added to Person.
+			Version 3.7.2
+				- minLength = 1 for PostCode and VATNumber.
+			Version 3.7.3
+				- Corrected how 0 restriction for Employee was expressed, no functional change.
+			Version 3.7.4
+				- Occupation enumeration UNSPECIFIED replaced by OTHER.
+				- Namespace adjusted.
+			Version 3.7.5
+					-Restructured
+			Version 3.7.6
+					- Removed Employee and Person
+					- Adjusted Department and ServiceFunction 
+		</xs:documentation>
+	</xs:annotation>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OrganisationsVersion">
+		<xs:annotation>
+			<xs:documentation>Contains information about organisations and their roles.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ConsecutiveVersion">
+				<xs:sequence>
+					<xs:element name="Organisations" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Organisation" type="PT:Organisation" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Departments" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Department" type="PT:Department" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ServiceFunctions" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="ServiceFunction" type="PT:ServiceFunction" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="TransportAuthorities" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="TransportAuthority" type="PT:TransportAuthority" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Contractors" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Contractor" type="PT:Contractor" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Contractor">
+		<xs:annotation>
+			<xs:documentation>A Contractor is a company that operates vehicles in public transport on behalf of a transport authority. Transmodel uses the term OPERATOR to cover this and some related aspects. As the Scandinavian situation is complex with multilevel public authorities, and publicly owned companies more or less involved in the operation of public transport, the use of OPERATOR could cause confusion and is thus avoided in PubTrans 5. The word OPERATOR is replaced by 'Contractor' or 'Transport Authority' to accordingly.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="PromotedByTransportAuthorityRef" type="PT:TransportAuthorityRef"/>
+					<xs:element name="CompanyRef" type="PT:CompanyRef"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Number" type="PT:ContractorNumber" use="required"/>
+				<xs:attribute name="ContractRequirement" type="PT:YesNo" use="optional" default="N">
+					<xs:annotation>
+						<xs:documentation>Indicates that a reference to Contract is required in imported VehicleJourneys</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="TransportAuthority">
+		<xs:annotation>
+			<xs:documentation>A TransportAuthority provides public transport using Contractors to carry out the actual vehicle operation. In previous versions of PubTrans the term Operator has been used to cover this aspect. To avoid confussion the term Operator is avoided altogether in PubTrans 5. The terms  'Contractor' and 'Transport Authority' are instead used to clarify the two different roles. </xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="UsesPublicCalendarDefinedByTransportAuthorityRef" type="PT:TransportAuthorityRef" minOccurs="0"/>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Number" type="PT:TransportAuthorityNumber" use="required"/>
+				<xs:attribute name="OrganisationCode" type="PT:Code" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Organisation">
+		<xs:annotation>
+			<xs:documentation>Organisation is a top-level OrganisationalUnit. A company is a type of Organisation.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:OrganisationalUnit">
+				<xs:attribute name="VATNumber" type="PT:VATNumber" use="optional"/>
+				<xs:attribute name="FormalName" type="PT:Name" use="optional"/>
+				<xs:attribute name="Type" type="PT:OrganisationType" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="Department">
+		<xs:annotation>
+			<xs:documentation>Department is part of a higher level OrganisationalUnit. It can be placed directly under a Organisation or under another Department.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:OrganisationalUnit">
+				<xs:sequence>
+					<xs:element name="IsPartOfOrganisationalUnitRef" type="PT:OrganisationalOrDepartmentUnitRef">
+						<xs:annotation>
+							<xs:documentation>Observe that circular references are not permitted.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="OrganisationalUnit">
+		<xs:annotation>
+			<xs:documentation>Characteristics for an OrganisationalUnit.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="CommunicationAddresses" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="CommunicationAddress" type="PT:CommunicationAddress" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+					<xs:element name="Location" type="PT:Location" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Code" type="PT:Code" use="required"/>
+				<xs:attribute name="Name" type="PT:Name" use="required"/>
+				<xs:attribute name="VisitingAddressName" type="PT:Name" use="optional"/>
+				<xs:attribute name="MailAddressName" type="PT:Name" use="optional"/>
+				<xs:attribute name="PostCode" type="PT:Postcode" use="optional"/>
+				<xs:attribute name="PostOfficeName" type="PT:Name" use="optional"/>
+				<xs:attribute name="CountryName" type="PT:Name" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:complexType name="ServiceFunction">
+		<xs:complexContent>
+			<xs:extension base="PT:ExtendablePTObject">
+				<xs:sequence>
+					<xs:element name="DelegatedToOrganisationalUnitRef" type="PT:OrganisationalOrDepartmentUnitRef">
+						<xs:annotation>
+							<xs:documentation>Reference to the Organisational Unit that provides the service function.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DelegatedByOrganisationalUnitRefs" type="PT:OrganisationalUnitRefs">
+						<xs:annotation>
+							<xs:documentation>Reference(s) to the Organisational Unit(s) that uses the specified service function. Observe that it is implied that Departments under these Organisational Units also uses the service function.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ValidDatePeriod" type="PT:PeriodOfDays" minOccurs="0"/>
+				</xs:sequence>
+				<xs:attribute name="Type" type="PT:ServiceFunctionType" use="required"/>
+				<xs:attribute name="Note" type="PT:Note" use="optional">
+					<xs:annotation>
+						<xs:documentation>For example opening hours</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!--  *********************************************************  -->
+	<xs:simpleType name="EmployeeNumber">
+		<xs:annotation>
+			<xs:documentation>Unique number of employee within organisation.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="99999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Gender">
+		<xs:annotation>
+			<xs:documentation>Male or female</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="M"/>
+			<xs:enumeration value="F"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Occupation">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="DRIVER"/>
+			<xs:enumeration value="SERVICE"/>
+			<xs:enumeration value="TRAFFIC_CONTROLLER"/>
+			<xs:enumeration value="MANAGER"/>
+			<xs:enumeration value="OTHER"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OrganisationType">
+		<xs:annotation>
+			<xs:documentation>Company, Community or Government.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="GOVERNMENT"/>
+			<xs:enumeration value="COMPANY"/>
+			<xs:enumeration value="COMMUNITY"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Postcode">
+		<xs:annotation>
+			<xs:documentation>Postal code.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ServiceFunctionType">
+		<xs:annotation>
+			<xs:documentation>. I.e Lost and found, Sales agent, Control Centre. Additional ServiceFunctionTypes can be defined in schemas adapted for each transport authority</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="BACKUP_CONTROL_CENTRE"/>
+			<xs:enumeration value="COMPLAINTS_OFFICE"/>
+			<xs:enumeration value="CONTROL_CENTRE"/>
+			<xs:enumeration value="LOST_AND_FOUND"/>
+			<xs:enumeration value="SALES_AGENT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VATNumber">
+		<xs:annotation>
+			<xs:documentation>VAT number.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

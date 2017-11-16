@@ -11,5 +11,12 @@
 
   <name>noptis-dii-java</name>
   <description>JAXB generated Java representation of the NOPTIS Data Input Interface (DII) XML standard.</description>
+  <url>https://github.com/wizzon/noptis-dii-java</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+  </properties>
 
 </project>
