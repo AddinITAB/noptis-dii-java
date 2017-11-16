@@ -83,6 +83,7 @@
                                 <xsdOption>
                                     <xsd>${basedir}/profile/NOPTIS-DII-3.0/schema/xsd/DII.xsd</xsd>
                                     <extension>true</extension>
+                                    <bindingFile>bindings.xjb</bindingFile>
                                     <extensionArgs>
                                         <extensionArg>-Xbug986</extensionArg>
                                         <!--<extensionArg>-Xfluent-api</extensionArg>-->
